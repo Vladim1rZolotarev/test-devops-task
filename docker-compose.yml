@@ -7,13 +7,22 @@ services:
       context: .
     expose:
       - "5000"  # Открываем порт внутри сети
+    depends_on:
+      - fluentd
     environment:
       - FLASK_ENV=production
     restart: always
     networks:
       - my_network  # Добавляем в сеть
     deploy:
-      replicas: 3  # Количество реплик приложения
+      replicas: 1  # Количество реплик приложения
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: flask.logs
+    links:
+      - fluentd
 
   nginx:
     image: nginx:latest
@@ -22,9 +31,53 @@ services:
     ports:
       - "2727:80"
     depends_on:
+      - fluentd
       - flask-app
     networks:
       - my_network  # Добавляем в ту же сеть
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: nginx.logs
+    links:
+      - fluentd
+
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - my_network
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    networks:
+      - my_network
+
+  fluentd:
+    image: fluent/fluentd:edge
+    volumes:
+      - ./fluentd.conf:/fluentd/etc/fluentd.conf
+    ports:
+      - "24224:24224"
+      - "24224:24224/udp"
+    restart: always
+    networks:
+      - my_network
+
+  loki:
+    image: grafana/loki:latest
+    ports:
+      - "3100:3100"
+    networks:
+      - my_network
 
 networks:
   my_network:  # Создаём общую сеть
