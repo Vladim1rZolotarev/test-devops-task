@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  flask-app:
+    image: vladim1rzolotarev/flask-app:latest
+    build:
+      context: .
+    expose:
+      - "5000"  # Открываем порт внутри сети
+    environment:
+      - FLASK_ENV=production
+    restart: always
+    networks:
+      - my_network  # Добавляем в сеть
+    deploy:
+      replicas: 3  # Количество реплик приложения
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "2727:80"
+    depends_on:
+      - flask-app
+    networks:
+      - my_network  # Добавляем в ту же сеть
+
+networks:
+  my_network:  # Создаём общую сеть
+    driver: bridge
