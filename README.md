@@ -26,11 +26,9 @@
   echo '{"tag": "flask.logs", "message": "test log"}' | nc -u -w1 localhost 24224
 ```
 
-### 4. Настройка мониторинга (Prometheus + Grafana)
+### 4. Настройка сбора данных для мониторинга (Prometheus + Grafana)
 
-Веб-приложение предоставляет метрики в формате Prometheus через `prometheus-flask-exporter`.
-
-- Prometheus собирает метрики с Flask-приложения
+- Prometheus собирает метрики с Flask-приложения через `prometheus-flask-exporter`
 - Grafana подключается к Prometheus и визуализирует данные
 
 #### Добавление Prometheus в Grafana
@@ -39,16 +37,12 @@
 3. Нажать `Add data source` → выбрать `Prometheus`
 4. В поле URL указать: `http://prometheus:9090`
 5. Нажать `Save & Test`
+6. После чего в Grafana можно построить дашборды с метриками
 
-#### Проверка метрик
-1. Открыть Prometheus: [http://localhost:9090](http://localhost:9090)
-2. Ввести `flask_http_request_total` и нажать `Execute`
-3. В Grafana можно построить дашборды с метриками
+### 5. Настройка сбора логов (Loki + Grafana)
 
-### 5. Настройка сбора логов в Grafana (Loki)
-
-- Loki используется для хранения логов
 - Fluentd передает логи в Loki
+- Loki используется для хранения логов
 - Grafana подключается к Loki и позволяет просматривать логи
 
 #### Добавление Loki в Grafana
@@ -96,6 +90,7 @@ docker-compose pull && docker-compose up -d
 ├── restart_docker_compose.sh # Скрипт перезапуска сервисов
 └── README.md                # Документация проекта
 ```
+
 ### 9. Установка и запуск
 Клонируйте репозиторий:
 ```bash
@@ -106,12 +101,11 @@ cd test-devops-task
 ```bash
 docker-compose up --build -d
 ```
+
 ### 10. Доступ к сервисам:
-Flask-приложение: `http://localhost:5000`
-Nginx (балансировщик): `http://localhost:2727`
-Prometheus (мониторинг): `http://localhost:9090`
-Grafana (дашборды): `http://localhost:3000`
-Loki (логирование): `http://localhost:3100`
+WEB-приложение/CV сайт (проксируется через Nginx): `http://localhost:2727`
+Grafana (метрики и логи): `http://localhost:3000``
+
 ### 11. Описание сервисов
 ####Flask-приложение
 Запускается в контейнере, принимает HTTP-запросы
