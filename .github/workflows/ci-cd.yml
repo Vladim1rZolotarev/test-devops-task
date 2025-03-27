@@ -28,7 +28,7 @@ jobs:
     - name: Determine tag
       id: tag
       run: |
-        if [[ $GITHUB_REF == 'refs/heads/main' ]]; then
+        if [[ $GITHUB_REF == 'refs/heads/master' ]]; then
           echo "TAG=latest" >> $GITHUB_OUTPUT
           echo "COMPOSE_ENV=production" >> $GITHUB_OUTPUT
         else
