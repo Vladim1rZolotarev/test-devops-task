@@ -120,21 +120,32 @@ test-devops-task/
 2. Выбрать источник данных `Loki`
 3. Ввести `{job="flask.logs"}` и запустить поиск
 
-## Установка и запуск проекта
+## Установка и запуск
 
-### Клонируйте репозиторий проекта:
+### Клонируйте репозиторий:
 
 ```bash
 git clone https://github.com/Vladim1rZolotarev/test-devops-task.git
+```
+
+### Перейдите в директорию с проектом:
+
+```bash
 cd test-devops-task
 ```
 
-### Запустите проект через Docker Compose:
+### Запустите через Docker Compose:
 
 ```bash
 docker compose up --build -d
 ```
 
-### Доступ к сервисам
+### Или просто запустите проект с DockerHub:
+
+```bash
+docker run vladim1rzolotarev/flask-app:latest
+```
+
+### Доступ к сервисам:
 WEB-приложение/CV сайт (проксируется через Nginx): `http://localhost:2727`
 Grafana (метрики и логи): `http://localhost:3000`
