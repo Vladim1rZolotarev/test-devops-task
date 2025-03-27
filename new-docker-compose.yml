@@ -5,43 +5,43 @@ services:
     image: vladim1rzolotarev/flask-app:latest
     build:
       context: .
-    expose:
-      - "5000"  # Открываем порт внутри сети
+    ports:
+      - "5000:5000"
     depends_on:
-      - fluentd
+      fluentd:
+        condition: service_healthy
     environment:
       - FLASK_ENV=production
     restart: always
     networks:
-      - my_network  # Добавляем в сеть
-    deploy:
-      replicas: 1  # Количество реплик приложения
+      - my_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     logging:
       driver: "fluentd"
       options:
-        fluentd-address: localhost:24224
+        fluentd-address: fluentd:24224
         tag: flask.logs
-    links:
-      - fluentd
 
   nginx:
-    image: nginx:latest
+    image: nginx:1.25.3
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
     ports:
       - "2727:80"
     depends_on:
-      - fluentd
-      - flask-app
+      flask-app:
+        condition: service_healthy
     networks:
-      - my_network  # Добавляем в ту же сеть
+      - my_network
     logging:
       driver: "fluentd"
       options:
-        fluentd-address: localhost:24224
+        fluentd-address: fluentd:24224
         tag: nginx.logs
-    links:
-      - fluentd
 
   prometheus:
     image: prom/prometheus:latest
@@ -53,11 +53,12 @@ services:
       - my_network
 
   grafana:
-    image: grafana/grafana:latest
+    image: grafana/grafana:10.1.1
     ports:
       - "3000:3000"
     depends_on:
-      - prometheus
+      prometheus:
+        condition: service_healthy
     networks:
       - my_network
     volumes:
@@ -70,26 +71,29 @@ services:
       - fluentd_data:/fluentd/log
     ports:
       - "24224:24224"
-      - "24224:24224/udp"
+    healthcheck:
+      test: ["CMD", "sh", "-c", "echo '{\"health\": \"check\"}' | fluent-cat debug"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     restart: always
     networks:
       - my_network
 
   loki:
-    image: grafana/loki:latest
+    image: grafana/loki:2.9.1
     volumes:
       - ./loki-config.yml:/etc/loki/local-config.yml
       - loki_data:/loki
-    ports:
-      - "3100:3100"
     depends_on:
-      - fluentd
+      fluentd:
+        condition: service_healthy
     restart: always
     networks:
       - my_network
 
 networks:
-  my_network:  # Создаём общую сеть
+  my_network:
     driver: bridge
 
 volumes:

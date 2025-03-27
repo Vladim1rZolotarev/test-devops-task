@@ -1,0 +1,123 @@
+/* Основные стили */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+}
+
+/* Кастомные цвета */
+:root {
+    --custom-green: #009b77;
+    --custom-green-light: #009b77;
+}
+
+.bg-success-custom {
+    background-color: var(--custom-green) !important;
+}
+
+.border-success-custom {
+    border-color: var(--custom-green) !important;
+}
+
+.text-success-custom {
+    color: var(--custom-green) !important;
+}
+
+.btn-outline-success-custom {
+    color: var(--custom-green);
+    border-color: var(--custom-green);
+}
+
+.btn-outline-success-custom:hover {
+    color: #fff;
+    background-color: var(--custom-green);
+    border-color: var(--custom-green);
+}
+
+/* Прогресс-бары */
+.progress {
+    height: 25px;
+    border-radius: 12px;
+    overflow: visible;
+    background-color: #e9ecef;
+}
+
+.progress-bar {
+    position: relative;
+    border-radius: 12px;
+    animation: progress-animation 1.5s ease-in-out;
+}
+
+.progress-bar::after {
+    content: attr(aria-valuenow);
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: white;
+    font-weight: bold;
+    font-size: 0.8rem;
+}
+
+@keyframes progress-animation {
+    from { width: 0; }
+}
+
+/* Карточки */
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.card-header {
+    font-weight: 600;
+}
+
+/* Логотип университета */
+.university-logo {
+    height: 40px;
+    filter: brightness(0) invert(1);
+    transition: transform 0.3s ease;
+}
+
+.university-logo:hover {
+    transform: rotate(-5deg) scale(1.1);
+}
+
+/* Фото кампуса */
+.campus-photo {
+    border: 3px solid var(--custom-green);
+    padding: 5px;
+    background: white;
+    max-height: 120px;
+    transition: transform 0.3s ease;
+}
+
+.campus-photo:hover {
+    transform: scale(1.05);
+}
+
+/* Кнопки */
+.btn {
+    transition: all 0.3s ease;
+    border-radius: 50px;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .progress-bar::after {
+        font-size: 0.7rem;
+    }
+    
+    .campus-photo {
+        max-height: 100px;
+        margin-top: 1rem;
+    }
+}
