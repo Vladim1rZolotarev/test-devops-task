@@ -1,19 +1,20 @@
-version: '3.8'
-
 services:
   flask-app:
     image: vladim1rzolotarev/flask-app:latest
     build:
       context: .
-    expose:
-      - "5000"
+    ports:
+      - "5000:5000"
     environment:
       - FLASK_ENV=production
     restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5000/health || exit 1"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
     networks:
       - my_network
-    deploy:
-      replicas: 3
     logging:
       driver: loki
       options:
@@ -27,7 +28,8 @@ services:
     ports:
       - "2727:80"
     depends_on:
-      - flask-app
+      flask-app:
+        condition: service_healthy
     networks:
       - my_network
     logging:
@@ -65,8 +67,10 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - prometheus
-      - loki
+      prometheus:
+        condition: service_started
+      loki:
+        condition: service_started
     networks:
       - my_network
     volumes:
