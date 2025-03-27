@@ -49,6 +49,7 @@ jobs:
         key: ${{ secrets.SERVER_SSH_KEY }}
         script: |
           sudo docker rm $(sudo docker stop $(sudo docker ps -a -q))
+          sudo docker rmi $(sudo docker images -q)
           export TAG=${{ steps.tag.outputs.TAG }}
           export ENV=${{ steps.tag.outputs.COMPOSE_ENV }}
           echo "Starting new containers..."
@@ -75,6 +76,7 @@ jobs:
         script: |
           # Откат на предыдущий стабильный образ
           sudo docker rm $(sudo docker stop $(sudo docker ps -a -q))
+          sudo docker rmi $(sudo docker images -q)
           sudo docker pull vladim1rzolotarev/flask-app:rollback
           sudo docker tag vladim1rzolotarev/flask-app:rollback vladim1rzolotarev/flask-app:$TAG
           sudo docker run vladim1rzolotarev/flask-app:$TAG
