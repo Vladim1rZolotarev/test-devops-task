@@ -49,6 +49,8 @@ jobs:
         key: ${{ secrets.SERVER_SSH_KEY }}
         script: |
           cd ~/test-devops-task
+          git pull origin master
+          sleep 3
           export TAG=${{ steps.tag.outputs.TAG }}
           export ENV=${{ steps.tag.outputs.COMPOSE_ENV }}
           echo "Pulling latest image..."
