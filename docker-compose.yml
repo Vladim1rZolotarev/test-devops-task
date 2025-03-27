@@ -1,43 +1,50 @@
+version: '3.8'
+
 services:
   flask-app:
     image: vladim1rzolotarev/flask-app:latest
     build:
       context: .
-      cache_from: 
-        - vladim1rzolotarev/flask-app:latest
-    ports:
-      - "5000:5000"
+    expose:
+      - "5000"
     environment:
       - FLASK_ENV=production
-    restart: unless-stopped
+    restart: always
+    networks:
+      - my_network
     deploy:
       replicas: 3
-      update_config:
-        parallelism: 3  # Параллельное обновление реплик
-        delay: 5s
-    logging: &loki-logging
+    logging:
       driver: loki
       options:
         loki-url: "http://loki:3100/loki/api/v1/push"
-        loki-external-labels: "job={{.ServiceName}}"
+        loki-external-labels: "job=flask-app,container_name={{.Name}}"
 
   nginx:
-    image: nginx:alpine  # Более легкий образ
+    image: nginx:latest
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
     ports:
       - "2727:80"
     depends_on:
-      flask-app:
-        condition: service_healthy
+      - flask-app
     networks:
       - my_network
-    logging: *loki-logging  # Используем шаблон
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 256M
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://loki:3100/loki/api/v1/push"
+        loki-external-labels: "job=nginx,container_name={{.Name}}"
+        loki-pipeline-stages: |
+          - json:
+              expressions:
+                remote_addr:
+                request:
+                status:
+          - labels:
+              status:
+          - static_labels:
+              app: nginx
 
   prometheus:
     image: prom/prometheus:latest
@@ -47,10 +54,11 @@ services:
       - "9090:9090"
     networks:
       - my_network
-    logging: *loki-logging
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.retention.time=7d'  # Ограничение хранения метрик
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://loki:3100/loki/api/v1/push"
+        loki-external-labels: "job=prometheus"
 
   grafana:
     image: grafana/grafana:latest
@@ -63,26 +71,23 @@ services:
       - my_network
     volumes:
       - grafana_data:/var/lib/grafana
-    logging: *loki-logging
-    environment:
-      - GF_SERVER_ENABLE_GZIP=true  # Оптимизация трафика
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://loki:3100/loki/api/v1/push"
+        loki-external-labels: "job=grafana"
 
   loki:
-    image: grafana/loki:2.8.0  # Фиксируем версию
+    image: grafana/loki:latest
     volumes:
       - ./loki-config.yml:/etc/loki/local-config.yml
       - loki_data:/loki
     ports:
       - "3100:3100"
+    restart: always
     networks:
       - my_network
     command: -config.file=/etc/loki/local-config.yml
-    logging: *loki-logging
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 512M
 
 networks:
   my_network:
