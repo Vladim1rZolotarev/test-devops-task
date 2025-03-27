@@ -84,7 +84,6 @@ services:
     restart: always
     networks:
       - my_network
-    command: -config.file=/etc/loki/local-config.yml
 
 networks:
   my_network:
