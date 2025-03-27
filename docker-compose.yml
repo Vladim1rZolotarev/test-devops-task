@@ -10,11 +10,6 @@ services:
     environment:
       - FLASK_ENV=production
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD-SHELL", "curl -fs http://localhost:5000/health || exit 1"]
-      interval: 10s
-      timeout: 2s
-      retries: 3
     deploy:
       replicas: 3
       update_config:
