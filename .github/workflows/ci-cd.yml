@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - feature  # Запуск деплоя на staging
-      - main     # Запуск деплоя на production
+      - master     # Запуск деплоя на production
 
 jobs:
   deploy:
@@ -25,14 +25,14 @@ jobs:
 
     - name: Build and push Docker image
       run: |
-        if [[ $GITHUB_REF == 'refs/heads/main' ]]; then
+        if [[ $GITHUB_REF == 'refs/heads/master' ]]; then
           TAG="latest"
         else
           TAG="staging"
         fi
 
-        docker build -t vladim1rzolotarev/flask-app:$TAG .
-        docker push vladim1rzolotarev/flask-app:$TAG
+        sudo docker build -t vladim1rzolotarev/flask-app:$TAG .
+        sudo docker push vladim1rzolotarev/flask-app:$TAG
 
     - name: Deploy to server
       uses: appleboy/ssh-action@v0.1.10
@@ -42,7 +42,7 @@ jobs:
         key: ${{ secrets.SERVER_SSH_KEY }}
         script: |
           set -e
-          if [[ $GITHUB_REF == 'refs/heads/main' ]]; then
+          if [[ $GITHUB_REF == 'refs/heads/master' ]]; then
             COMPOSE_FILE="docker-compose.prod.yml"
             TAG="latest"
           else
@@ -51,13 +51,13 @@ jobs:
           fi
 
           echo "Pulling latest image..."
-          docker pull vladim1rzolotarev/flask-app:$TAG
+          sudo docker pull vladim1rzolotarev/flask-app:$TAG
           
           echo "Stopping current containers..."
-          docker-compose -f $COMPOSE_FILE down
+          sudo docker-compose -f $COMPOSE_FILE down
           
           echo "Starting new containers..."
-          docker-compose -f $COMPOSE_FILE up -d
+          sudo docker-compose -f $COMPOSE_FILE up -d
 
           echo "Checking container health..."
           sleep 10
@@ -81,7 +81,7 @@ jobs:
         script: |
           echo "Rolling back to previous stable version..."
           
-          if [[ $GITHUB_REF == 'refs/heads/main' ]]; then
+          if [[ $GITHUB_REF == 'refs/heads/master' ]]; then
             COMPOSE_FILE="docker-compose.prod.yml"
             TAG="latest"
           else
@@ -90,10 +90,10 @@ jobs:
           fi
           
           # Откат на предыдущий стабильный образ
-          docker pull vladim1rzolotarev/flask-app:rollback
-          docker tag vladim1rzolotarev/flask-app:rollback vladim1rzolotarev/flask-app:$TAG
+          sudo docker pull vladim1rzolotarev/flask-app:rollback
+          sudo docker tag vladim1rzolotarev/flask-app:rollback vladim1rzolotarev/flask-app:$TAG
           
-          docker-compose -f $COMPOSE_FILE down
-          docker-compose -f $COMPOSE_FILE up -d
+          sudo docker-compose -f $COMPOSE_FILE down
+          sudo docker-compose -f $COMPOSE_FILE up -d
           
           echo "Rollback completed successfully."
