@@ -22,7 +22,6 @@ test-devops-task/
    ├── Dockerfile               # Сборка Flask-приложения
    ├── README.md                # Документация проекта
    ├── docker-compose.yml       # Конфигурация контейнеров
-   ├── fluentd.conf             # Конфигурация Fluentd
    ├── loki-config.yml          # Конфигурация Loki
    ├── nginx.conf               # Конфигурация Nginx
    └── prometheus.yml           # Конфигурация Prometheus
