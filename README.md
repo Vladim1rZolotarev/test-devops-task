@@ -27,6 +27,35 @@ test-devops-task/
    └── prometheus.yml           # Конфигурация Prometheus
 ```
 
+## Установка и запуск
+
+### Клонируйте репозиторий:
+
+```bash
+git clone https://github.com/Vladim1rZolotarev/test-devops-task.git
+```
+
+### Перейдите в директорию с проектом:
+
+```bash
+cd test-devops-task
+```
+
+### Запустите через Docker Compose:
+
+```bash
+docker compose up --build -d
+```
+
+### Или просто запустите проект с DockerHub:
+
+```bash
+docker run vladim1rzolotarev/flask-app:latest
+```
+
+### Доступ к сервисам:
+WEB-приложение/CV сайт (проксируется через Nginx): `http://localhost:2727`
+Grafana (метрики и логи): `http://localhost:3000`
 ## Выполненные задачи
 
 ### 1. Развертывание WEB-приложения
@@ -91,24 +120,16 @@ test-devops-task/
 3. Нажать `Add data source` → выбрать `Prometheus`
 4. В поле URL указать: `http://prometheus:9090`
 5. Нажать `Save & Test`
-6. После чего в Grafana можно построить дашборды с метриками
+6. После чего в Grafana можно добавить дашборды с метриками
 
-### 5. Настройка системы логирования (Fluentd + Loki)
-- Все логи от Flask и Nginx собираются через **Fluentd**.
-- Fluentd передает логи в **Loki**, который используется в связке с **Grafana**.
-- Для проверки логов можно отправить тестовое сообщение:
-```bash
-  echo '{"tag": "flask.logs", "message": "test log"}' | nc -u -w1 localhost 24224
-```
+### 5. Реализация сбора логов (Nginx + Loki Docker Driver Client + Loki + Grafana)
 
-### 5. Настройка сбора логов (Loki + Grafana)
-
-- Fluentd передает логи в Loki
+- Loki Docker Driver Client собирает логи из Nginx и передает их в Loki
 - Loki используется для хранения логов
 - Grafana подключается к Loki и позволяет просматривать логи
 
 #### Добавление Loki в Grafana
-1. Войти в Grafana: [http://localhost:3000](http://localhost:3000)
+1. Войти в [Grafana](http://89.169.153.58:3000)
 2. Перейти в `Configuration → Data Sources`
 3. Нажать `Add data source` → выбрать `Loki`
 4. В поле URL указать: `http://loki:3100`
@@ -117,34 +138,4 @@ test-devops-task/
 #### Проверка логов
 1. Перейти в Grafana → `Explore`
 2. Выбрать источник данных `Loki`
-3. Ввести `{job="flask.logs"}` и запустить поиск
-
-## Установка и запуск
-
-### Клонируйте репозиторий:
-
-```bash
-git clone https://github.com/Vladim1rZolotarev/test-devops-task.git
-```
-
-### Перейдите в директорию с проектом:
-
-```bash
-cd test-devops-task
-```
-
-### Запустите через Docker Compose:
-
-```bash
-docker compose up --build -d
-```
-
-### Или просто запустите проект с DockerHub:
-
-```bash
-docker run vladim1rzolotarev/flask-app:latest
-```
-
-### Доступ к сервисам:
-WEB-приложение/CV сайт (проксируется через Nginx): `http://localhost:2727`
-Grafana (метрики и логи): `http://localhost:3000`
+3. Ввести `{job="flask.logs"}` и запустить `Run query`
