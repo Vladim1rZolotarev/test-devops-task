@@ -7,8 +7,6 @@ services:
       context: .
     expose:
       - "5000"
-    depends_on:
-      - fluentd
     environment:
       - FLASK_ENV=production
     restart: always
@@ -17,12 +15,10 @@ services:
     deploy:
       replicas: 3
     logging:
-      driver: fluentd
+      driver: loki
       options:
-        fluentd-address: localhost:24224
-        tag: flask.logs
-    links:
-      - fluentd
+        loki-url: "http://loki:3100/loki/api/v1/push"
+        loki-external-labels: "job=flask-app,container_name={{.Name}}"
 
   nginx:
     image: nginx:latest
@@ -31,17 +27,24 @@ services:
     ports:
       - "2727:80"
     depends_on:
-      - fluentd
       - flask-app
     networks:
       - my_network
     logging:
-      driver: fluentd
+      driver: loki
       options:
-        fluentd-address: localhost:24224
-        tag: nginx.logs
-    links:
-      - fluentd
+        loki-url: "http://loki:3100/loki/api/v1/push"
+        loki-external-labels: "job=nginx,container_name={{.Name}}"
+        loki-pipeline-stages: |
+          - json:
+              expressions:
+                remote_addr:
+                request:
+                status:
+          - labels:
+              status:
+          - static_labels:
+              app: nginx
 
   prometheus:
     image: prom/prometheus:latest
@@ -51,6 +54,11 @@ services:
       - "9090:9090"
     networks:
       - my_network
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://loki:3100/loki/api/v1/push"
+        loki-external-labels: "job=prometheus"
 
   grafana:
     image: grafana/grafana:latest
@@ -58,22 +66,16 @@ services:
       - "3000:3000"
     depends_on:
       - prometheus
+      - loki
     networks:
       - my_network
     volumes:
       - grafana_data:/var/lib/grafana
-
-  fluentd:
-    image: fluent/fluentd:latest
-    volumes:
-      - ./fluentd.conf:/fluentd/etc/fluentd.conf
-      - fluentd_data:/fluentd/log
-    ports:
-      - "24224:24224"
-      - "24224:24224/udp"
-    restart: always
-    networks:
-      - my_network
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://loki:3100/loki/api/v1/push"
+        loki-external-labels: "job=grafana"
 
   loki:
     image: grafana/loki:latest
@@ -82,11 +84,10 @@ services:
       - loki_data:/loki
     ports:
       - "3100:3100"
-    depends_on:
-      - fluentd
     restart: always
     networks:
       - my_network
+    command: -config.file=/etc/loki/local-config.yml
 
 networks:
   my_network:
@@ -94,5 +95,4 @@ networks:
 
 volumes:
   grafana_data:
-  fluentd_data:
   loki_data:
