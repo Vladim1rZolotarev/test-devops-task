@@ -9,6 +9,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      DOCKER_IMAGE: vladim1rzolotarev/flask-app
 
     steps:
     - name: Checkout repository
@@ -23,16 +25,21 @@ jobs:
         username: ${{ secrets.DOCKER_HUB_USERNAME }}
         password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-    - name: Build and push Docker image
+    - name: Determine tag
+      id: tag
       run: |
         if [[ $GITHUB_REF == 'refs/heads/main' ]]; then
-          TAG="latest"
+          echo "TAG=latest" >> $GITHUB_OUTPUT
+          echo "COMPOSE_ENV=production" >> $GITHUB_OUTPUT
         else
-          TAG="staging"
+          echo "TAG=staging" >> $GITHUB_OUTPUT
+          echo "COMPOSE_ENV=staging" >> $GITHUB_OUTPUT
         fi
 
-        docker build -t vladim1rzolotarev/flask-app:$TAG .
-        docker push vladim1rzolotarev/flask-app:$TAG
+    - name: Build and push Docker image
+      run: |
+        docker build -t $DOCKER_IMAGE:${{ steps.tag.outputs.TAG }} .
+        docker push $DOCKER_IMAGE:${{ steps.tag.outputs.TAG }}
 
     - name: Deploy to server
       uses: appleboy/ssh-action@v0.1.10
@@ -42,7 +49,8 @@ jobs:
         key: ${{ secrets.SERVER_SSH_KEY }}
         script: |
           cd ~/test-devops-task/
-          sudo docker pull vladim1rzolotarev/flask-app:${TAG}
+          export TAG=${{ steps.tag.outputs.TAG }}
+          export ENV=${{ steps.tag.outputs.COMPOSE_ENV }}
+          sudo docker pull $DOCKER_IMAGE:$TAG
           sudo docker compose down
-          sudo docker compose build --no-cache
           sudo docker compose up -d
