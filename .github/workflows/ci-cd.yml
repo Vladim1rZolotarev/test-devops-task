@@ -48,7 +48,6 @@ jobs:
         username: ${{ secrets.SERVER_USER }}
         key: ${{ secrets.SERVER_SSH_KEY }}
         script: |
-          cd ~/test-devops-task/
           export TAG=${{ steps.tag.outputs.TAG }}
           export ENV=${{ steps.tag.outputs.COMPOSE_ENV }}
           echo "Pulling latest image..."
