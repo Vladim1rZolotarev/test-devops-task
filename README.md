@@ -54,8 +54,9 @@ docker run vladim1rzolotarev/flask-app:latest
 ```
 
 ### Доступ к сервисам:
-WEB-приложение/CV сайт (проксируется через Nginx): `http://localhost:2727`
-Grafana (метрики и логи): `http://localhost:3000`
+- WEB-приложение/CV сайт (проксируется через Nginx): `http://localhost:2727`
+- Grafana (метрики и логи): `http://localhost:3000`
+
 ## Выполненные задачи
 
 ### 1. Развертывание WEB-приложения
