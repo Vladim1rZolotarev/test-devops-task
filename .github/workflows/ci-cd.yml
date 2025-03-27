@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - feature  # Деплой на staging
-      - main     # Деплой на production
+      - master     # Деплой на production
 
 jobs:
   deploy:
