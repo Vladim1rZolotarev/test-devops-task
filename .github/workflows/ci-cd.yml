@@ -48,6 +48,7 @@ jobs:
         username: ${{ secrets.SERVER_USER }}
         key: ${{ secrets.SERVER_SSH_KEY }}
         script: |
+          cd ~/test-devops-task
           export TAG=${{ steps.tag.outputs.TAG }}
           export ENV=${{ steps.tag.outputs.COMPOSE_ENV }}
           echo "Pulling latest image..."
@@ -77,6 +78,7 @@ jobs:
         key: ${{ secrets.SERVER_SSH_KEY }}
         script: |
           # Откат на предыдущий стабильный образ
+          cd ~/test-devops-task
           sudo docker pull vladim1rzolotarev/flask-app:rollback
           sudo docker tag vladim1rzolotarev/flask-app:rollback vladim1rzolotarev/flask-app:$TAG
           sudo docker compose down
