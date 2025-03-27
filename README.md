@@ -13,19 +13,19 @@ test-devops-task/
      ├── workflows/             # Директория workflows
        ├── ci-cd.yml            # Конфигурация CI/CD
    ├── app/                     # Директория WEB-приложения
-     ├── main.py                # Код Flask-приложения
-     ├── requirements.txt       # Зависимости для подгрузки библиотек
      ├── static/                # Директория CSS стилей
        ├── styles.css           # CSS стили ждя WEB-приложения
      ├── templates/             # Директория CSS стилей
        ├── styles.css           # CSS стили ждя WEB-приложения
-   ├── docker-compose.yml       # Конфигурация контейнеров
+     ├── main.py                # Код Flask-приложения
+     ├── requirements.txt       # Зависимости для подгрузки библиотек
    ├── Dockerfile               # Сборка Flask-приложения
+   ├── README.md                # Документация проекта
+   ├── docker-compose.yml       # Конфигурация контейнеров
    ├── fluentd.conf             # Конфигурация Fluentd
    ├── loki-config.yml          # Конфигурация Loki
    ├── nginx.conf               # Конфигурация Nginx
-   ├── prometheus.yml           # Конфигурация Prometheus
-   └── README.md                # Документация проекта
+   └── prometheus.yml           # Конфигурация Prometheus
 ```
 
 ## Выполненные задачи
@@ -40,9 +40,9 @@ test-devops-task/
 - Конфигурация Nginx (`nginx.conf`) проксирует запросы к Flask.
 - Nginx распределяет трафик между репликами приложения.
 
-### 2. Автоматический деплой на staging/production окружение (CI/CD Pipeline через GitHub Actions)
+### 2. Автоматический деплой на staging/production окружение
 
-Проект использует `GitHub Actions`. В директории `.github/workflows/` настроен Workflow для автоматического развертывания с разными стратегиями для разных веток.
+Для реализации автоматического деплоя и отката в проекте используется `GitHub Actions`.
 
 #### Автоматический деплой включает следующие этапы:
 1. Определение окружения:
@@ -80,6 +80,20 @@ test-devops-task/
    docker compose up -d
    ```
 
+### 4. Реализация интсрументов для сбора данных и мониторинга (Prometheus + Grafana)
+
+Для обеспечения мониторинга в проекте используются в связке `Prometheus` и `Grafana`:
+- Prometheus собирает метрики с WEB-приложения через `prometheus-flask-exporter`
+- Grafana подключается к Prometheus и визуализирует данные
+
+#### Процесс просмотра данных Prometheus в Grafana:
+1. Войти в [Grafana](http://89.169.153.58:3000)
+2. Перейти в `Configuration → Data Sources`
+3. Нажать `Add data source` → выбрать `Prometheus`
+4. В поле URL указать: `http://prometheus:9090`
+5. Нажать `Save & Test`
+6. После чего в Grafana можно построить дашборды с метриками
+
 ### 3. Настройка системы логирования (Fluentd + Loki)
 - Все логи от Flask и Nginx собираются через **Fluentd**.
 - Fluentd передает логи в **Loki**, который используется в связке с **Grafana**.
@@ -87,19 +101,6 @@ test-devops-task/
 ```bash
   echo '{"tag": "flask.logs", "message": "test log"}' | nc -u -w1 localhost 24224
 ```
-
-### 4. Настройка сбора данных для мониторинга (Prometheus + Grafana)
-
-- Prometheus собирает метрики с Flask-приложения через `prometheus-flask-exporter`
-- Grafana подключается к Prometheus и визуализирует данные
-
-#### Добавление Prometheus в Grafana
-1. Войти в Grafana: [http://localhost:3000](http://localhost:3000)
-2. Перейти в `Configuration → Data Sources`
-3. Нажать `Add data source` → выбрать `Prometheus`
-4. В поле URL указать: `http://prometheus:9090`
-5. Нажать `Save & Test`
-6. После чего в Grafana можно построить дашборды с метриками
 
 ### 5. Настройка сбора логов (Loki + Grafana)
 
