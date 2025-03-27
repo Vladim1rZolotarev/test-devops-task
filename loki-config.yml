@@ -7,7 +7,7 @@ server:
 common:
   storage:
     filesystem:
-      directory: /loki/storage  # Все данные теперь в одном месте
+      directory: /loki/storage
   replication_factor: 1
   ring:
     instance_addr: 127.0.0.1
@@ -30,12 +30,12 @@ storage_config:
     cache_location: /loki/cache
     shared_store: filesystem
   filesystem:
-    directory: /loki/chunks  # Добавлено хранение чанков
+    directory: /loki/chunks
 
 limits_config:
-  reject_old_samples: false  # Важно для Docker-логов!
+  reject_old_samples: false
   reject_old_samples_max_age: 168h  # 7 дней
-  ingestion_rate_mb: 16      # Лимит на прием логов
+  ingestion_rate_mb: 16
   ingestion_burst_size_mb: 32
   max_entries_limit_per_query: 5000
   retention_period: 168h     # Хранение 7 дней
@@ -46,7 +46,7 @@ compactor:
   retention_enabled: true
 
 chunk_store_config:
-  max_look_back_period: 168h  # Соответствует retention_period
+  max_look_back_period: 168h
 
 ingester:
   lifecycler:
