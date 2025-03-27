@@ -88,32 +88,24 @@ docker-compose pull && docker-compose up -d
 ├── restart_docker_compose.sh # Скрипт перезапуска сервисов
 └── README.md                # Документация проекта
 ```
-** 9. Установка и запуск
+### 9. Установка и запуск
 Клонируйте репозиторий:
-
 ```bash
 git clone https://github.com/Vladim1rZolotarev/test-devops-task.git
 cd test-devops-task
 ```
 Запустите сервисы через Docker Compose:
-
 ```bash
 docker-compose up --build -d
 ```
-Доступ к сервисам:
-
+### 10. Доступ к сервисам:
 Flask-приложение: `http://localhost:5000`
-
 Nginx (балансировщик): `http://localhost:2727`
-
 Prometheus (мониторинг): `http://localhost:9090`
-
 Grafana (дашборды): `http://localhost:3000`
-
 Loki (логирование): `http://localhost:3100`
-
-Описание сервисов
-Flask-приложение
+### 11. Описание сервисов
+####Flask-приложение
 Запускается в контейнере, принимает HTTP-запросы
 
 Включает экспорт метрик Prometheus
@@ -142,7 +134,7 @@ Loki (хранение логов)
 
 Конфигурация в docker-compose.yml:
 
-yaml
+```yaml
 Copy
 services:
   grafana:
@@ -159,6 +151,7 @@ volumes:
   grafana_data:
   loki_data:
   fluentd_logs:
+```
 Автоматический деплой (CI/CD)
 Настроенный workflow в GitHub Actions:
 
