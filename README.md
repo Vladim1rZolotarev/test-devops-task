@@ -6,7 +6,18 @@
 
 ## Состав проекта
 
-. ├── .github/workflows/       # Конфигурация GitHub Actions для CI/CD ├── app/                     # Исходный код Flask-приложения ├── docker-compose.yml        # Конфигурация Docker Compose ├── Dockerfile                # Инструкция сборки образа Flask-приложения ├── fluentd.conf              # Конфигурация Fluentd ├── loki-config.yml           # Конфигурация Loki ├── nginx.conf                # Конфигурация Nginx ├── prometheus.yml            # Конфигурация Prometheus ├── restart_docker_compose.sh # Скрипт для перезапуска сервисов └── README.md                 # Документация проекта
+test-devops-task/
+├── .github/workflows/    # GitHub Actions workflows
+│   └── main.yml          # Основной workflow для CI/CD
+├── docker/               # Docker-конфигурации
+│   ├── app/              # Конфигурация основного приложения
+│   ├── monitoring/       # Конфигурации для мониторинга
+│   └── nginx/            # Конфигурация Nginx
+├── infrastructure/       # Инфраструктура как код
+│   ├── modules/          # Модули Terraform
+│   └── main.tf           # Основной конфиг Terraform
+├── src/                  # Исходный код приложения
+└── README.md             # Основная документация
 
 ## Установка и запуск
 
