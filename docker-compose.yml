@@ -25,7 +25,7 @@ services:
       - fluentd
 
   nginx:
-    image: nginx:latest
+    image: nginx:7777
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
     ports:
