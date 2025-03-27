@@ -6,16 +6,16 @@ services:
     build:
       context: .
     expose:
-      - "5000"  # Открываем порт внутри сети
+      - "5000"
     depends_on:
       - fluentd
     environment:
       - FLASK_ENV=production
     restart: always
     networks:
-      - my_network  # Добавляем в сеть
+      - my_network
     deploy:
-      replicas: 1  # Количество реплик приложения
+      replicas: 3
     logging:
       driver: "fluentd"
       options:
@@ -34,7 +34,7 @@ services:
       - fluentd
       - flask-app
     networks:
-      - my_network  # Добавляем в ту же сеть
+      - my_network
     logging:
       driver: "fluentd"
       options:
@@ -89,7 +89,7 @@ services:
       - my_network
 
 networks:
-  my_network:  # Создаём общую сеть
+  my_network:
     driver: bridge
 
 volumes:
