@@ -120,82 +120,21 @@ test-devops-task/
 2. Выбрать источник данных `Loki`
 3. Ввести `{job="flask.logs"}` и запустить поиск
 
+## Установка и запуск проекта
 
+### Клонируйте репозиторий проекта:
 
-
-### 9. Установка и запуск
-Клонируйте репозиторий:
 ```bash
 git clone https://github.com/Vladim1rZolotarev/test-devops-task.git
 cd test-devops-task
 ```
-Запустите сервисы через Docker Compose:
+
+### Запустите проект через Docker Compose:
+
 ```bash
-docker-compose up --build -d
+docker compose up --build -d
 ```
 
-### 10. Доступ к сервисам:
+### Доступ к сервисам
 WEB-приложение/CV сайт (проксируется через Nginx): `http://localhost:2727`
-Grafana (метрики и логи): `http://localhost:3000``
-
-### 11. Описание сервисов
-####Flask-приложение
-Запускается в контейнере, принимает HTTP-запросы
-
-Включает экспорт метрик Prometheus
-
-Nginx (балансировщик нагрузки)
-Перенаправляет запросы на реплики Flask-приложения
-
-Работает на порту 2727
-
-Prometheus (мониторинг)
-Сборщик метрик, получает данные от Flask-приложения
-
-Grafana (дашборды)
-Визуализирует метрики Prometheus
-
-Для входа используется логин admin и пароль admin (по умолчанию)
-
-Fluentd (логирование)
-Собирает логи Flask и Nginx, передает их в Loki
-
-Loki (хранение логов)
-Сохраняет логи, доступные через Grafana
-
-Настройка томов для хранения данных
-Чтобы Grafana, Loki и Fluentd сохраняли данные после перезапуска, используются Docker volumes.
-
-Конфигурация в docker-compose.yml:
-
-```yaml
-Copy
-services:
-  grafana:
-    volumes:
-      - grafana_data:/var/lib/grafana
-  loki:
-    volumes:
-      - loki_data:/loki
-  fluentd:
-    volumes:
-      - fluentd_logs:/fluentd/log
-
-volumes:
-  grafana_data:
-  loki_data:
-  fluentd_logs:
-```
-Автоматический деплой (CI/CD)
-Настроенный workflow в GitHub Actions:
-
-Push в feature → деплой на staging
-
-Push в main → деплой на production
-
-Rollback (откат на предыдущую версию):
-bash
-Copy
-docker-compose pull && docker-compose up -d
-Автор
-Vladimir Zolotarev
+Grafana (метрики и логи): `http://localhost:3000`
