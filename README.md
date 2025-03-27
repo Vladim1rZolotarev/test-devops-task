@@ -80,7 +80,7 @@ test-devops-task/
    docker compose up -d
    ```
 
-### 4. Реализация интсрументов для сбора данных и мониторинга (Prometheus + Grafana)
+### 4. Реализация сбора данных и мониторинга (Prometheus + Grafana)
 
 Для обеспечения мониторинга в проекте используются в связке `Prometheus` и `Grafana`:
 - Prometheus собирает метрики с WEB-приложения через `prometheus-flask-exporter`
