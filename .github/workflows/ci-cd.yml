@@ -61,8 +61,6 @@ jobs:
         key: ${{ secrets.SERVER_SSH_KEY }}
         script: |
           set -euo pipefail
-          
-          # Установка плагина Loki (если нужно)
           if ! sudo docker plugin ls | grep -q "loki"; then
             sudo docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions || {
               echo "Failed to install Loki plugin"
