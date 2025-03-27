@@ -68,7 +68,107 @@
 - При пуше в `main` происходит деплой на production
 
 ### 7. Механизм отката (rollback)
-
 В случае ошибки можно откатиться на предыдущий образ:
 ```bash
 docker-compose pull && docker-compose up -d
+```
+Можно вручную указать версию образа и запустить старую версию.
+
+### 8. Структура проекта
+```
+.
+├── .github/workflows/       # GitHub Actions для CI/CD
+├── app/                     # Код Flask-приложения
+├── docker-compose.yml       # Конфигурация контейнеров
+├── Dockerfile               # Сборка Flask-приложения
+├── fluentd.conf             # Конфигурация Fluentd
+├── loki-config.yml          # Конфигурация Loki
+├── nginx.conf               # Конфигурация Nginx
+├── prometheus.yml           # Конфигурация Prometheus
+├── restart_docker_compose.sh # Скрипт перезапуска сервисов
+└── README.md                # Документация проекта
+```
+** 9. Установка и запуск
+Клонируйте репозиторий:
+
+```bash
+git clone https://github.com/Vladim1rZolotarev/test-devops-task.git
+cd test-devops-task
+```
+Запустите сервисы через Docker Compose:
+
+```bash
+docker-compose up --build -d
+```
+Доступ к сервисам:
+
+Flask-приложение: `http://localhost:5000`
+
+Nginx (балансировщик): `http://localhost:2727`
+
+Prometheus (мониторинг): `http://localhost:9090`
+
+Grafana (дашборды): `http://localhost:3000`
+
+Loki (логирование): `http://localhost:3100`
+
+Описание сервисов
+Flask-приложение
+Запускается в контейнере, принимает HTTP-запросы
+
+Включает экспорт метрик Prometheus
+
+Nginx (балансировщик нагрузки)
+Перенаправляет запросы на реплики Flask-приложения
+
+Работает на порту 2727
+
+Prometheus (мониторинг)
+Сборщик метрик, получает данные от Flask-приложения
+
+Grafana (дашборды)
+Визуализирует метрики Prometheus
+
+Для входа используется логин admin и пароль admin (по умолчанию)
+
+Fluentd (логирование)
+Собирает логи Flask и Nginx, передает их в Loki
+
+Loki (хранение логов)
+Сохраняет логи, доступные через Grafana
+
+Настройка томов для хранения данных
+Чтобы Grafana, Loki и Fluentd сохраняли данные после перезапуска, используются Docker volumes.
+
+Конфигурация в docker-compose.yml:
+
+yaml
+Copy
+services:
+  grafana:
+    volumes:
+      - grafana_data:/var/lib/grafana
+  loki:
+    volumes:
+      - loki_data:/loki
+  fluentd:
+    volumes:
+      - fluentd_logs:/fluentd/log
+
+volumes:
+  grafana_data:
+  loki_data:
+  fluentd_logs:
+Автоматический деплой (CI/CD)
+Настроенный workflow в GitHub Actions:
+
+Push в feature → деплой на staging
+
+Push в main → деплой на production
+
+Rollback (откат на предыдущую версию):
+bash
+Copy
+docker-compose pull && docker-compose up -d
+Автор
+Vladimir Zolotarev
