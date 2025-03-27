@@ -9,15 +9,18 @@ services:
       - "5000:5000"
     environment:
       - FLASK_ENV=production
-    restart: unless-stopped  # Более гибкая политика рестарта
+    restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "curl -fs http://localhost:5000/health || exit 1"]
-      interval: 10s  # Более частые проверки
+      interval: 10s
       timeout: 2s
       retries: 3
-    networks:
-      - my_network
-    logging: &loki-logging  # Шаблон для логов
+    deploy:
+      replicas: 3
+      update_config:
+        parallelism: 3  # Параллельное обновление реплик
+        delay: 5s
+    logging: &loki-logging
       driver: loki
       options:
         loki-url: "http://loki:3100/loki/api/v1/push"
