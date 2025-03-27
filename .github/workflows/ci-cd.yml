@@ -49,6 +49,9 @@ jobs:
         username: ${{ secrets.SERVER_USER }}
         key: ${{ secrets.SERVER_SSH_KEY }}
         script: |
+          if ! sudo docker plugin ls | grep -q "loki"; then
+            sudo docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions
+          fi
           cd ~/test-devops-task
           git pull origin ${{ github.ref_name }}
           export TAG=${{ steps.tag.outputs.TAG }}
