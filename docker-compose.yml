@@ -3,26 +3,28 @@ services:
     image: vladim1rzolotarev/flask-app:latest
     build:
       context: .
+      cache_from: 
+        - vladim1rzolotarev/flask-app:latest
     ports:
       - "5000:5000"
     environment:
       - FLASK_ENV=production
-    restart: always
+    restart: unless-stopped  # Более гибкая политика рестарта
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:5000/health || exit 1"]
-      interval: 30s
-      timeout: 3s
+      test: ["CMD-SHELL", "curl -fs http://localhost:5000/health || exit 1"]
+      interval: 10s  # Более частые проверки
+      timeout: 2s
       retries: 3
     networks:
       - my_network
-    logging:
+    logging: &loki-logging  # Шаблон для логов
       driver: loki
       options:
         loki-url: "http://loki:3100/loki/api/v1/push"
-        loki-external-labels: "job=flask-app,container_name={{.Name}}"
+        loki-external-labels: "job={{.ServiceName}}"
 
   nginx:
-    image: nginx:latest
+    image: nginx:alpine  # Более легкий образ
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
     ports:
@@ -32,21 +34,12 @@ services:
         condition: service_healthy
     networks:
       - my_network
-    logging:
-      driver: loki
-      options:
-        loki-url: "http://loki:3100/loki/api/v1/push"
-        loki-external-labels: "job=nginx,container_name={{.Name}}"
-        loki-pipeline-stages: |
-          - json:
-              expressions:
-                remote_addr:
-                request:
-                status:
-          - labels:
-              status:
-          - static_labels:
-              app: nginx
+    logging: *loki-logging  # Используем шаблон
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
 
   prometheus:
     image: prom/prometheus:latest
@@ -56,42 +49,42 @@ services:
       - "9090:9090"
     networks:
       - my_network
-    logging:
-      driver: loki
-      options:
-        loki-url: "http://loki:3100/loki/api/v1/push"
-        loki-external-labels: "job=prometheus"
+    logging: *loki-logging
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.retention.time=7d'  # Ограничение хранения метрик
 
   grafana:
     image: grafana/grafana:latest
     ports:
       - "3000:3000"
     depends_on:
-      prometheus:
-        condition: service_started
-      loki:
-        condition: service_started
+      - prometheus
+      - loki
     networks:
       - my_network
     volumes:
       - grafana_data:/var/lib/grafana
-    logging:
-      driver: loki
-      options:
-        loki-url: "http://loki:3100/loki/api/v1/push"
-        loki-external-labels: "job=grafana"
+    logging: *loki-logging
+    environment:
+      - GF_SERVER_ENABLE_GZIP=true  # Оптимизация трафика
 
   loki:
-    image: grafana/loki:latest
+    image: grafana/loki:2.8.0  # Фиксируем версию
     volumes:
       - ./loki-config.yml:/etc/loki/local-config.yml
       - loki_data:/loki
     ports:
       - "3100:3100"
-    restart: always
     networks:
       - my_network
     command: -config.file=/etc/loki/local-config.yml
+    logging: *loki-logging
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
 
 networks:
   my_network:
