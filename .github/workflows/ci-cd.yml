@@ -3,8 +3,8 @@ name: Deploy to Staging and Production
 on:
   push:
     branches:
-      - feature  # Запуск деплоя на staging
-      - main     # Запуск деплоя на production
+      - feature  # Деплой на staging
+      - main     # Деплой на production
 
 jobs:
   deploy:
