@@ -47,12 +47,6 @@ cd test-devops-task
 docker compose up --build -d
 ```
 
-### Или просто запустите проект с DockerHub:
-
-```bash
-docker run vladim1rzolotarev/flask-app:latest
-```
-
 ### Доступ к сервисам:
 - WEB-приложение/CV сайт (проксируется через Nginx): `http://localhost:2727`
 - Grafana (метрики и логи): `http://localhost:3000`
@@ -63,7 +57,7 @@ docker run vladim1rzolotarev/flask-app:latest
 - Разработано WEB-приложение, представляющее собой Сайт СV (Python + Flask - бэкенд, HTML + CSS - фронтенд).
 - Создан `Dockerfile` для сборки образа WEB-приложения.
 - Собранный образ опубликован на [DockerHub](https://hub.docker.com/repository/docker/vladim1rzolotarev/flask-app/general).
-- Запуск контейнера осуществляется на [VDS Yandex Cloud](http://89.169.153.58:2727/).
+- Запуск контейнера осуществляется на [VDS Yandex Cloud](http://89.169.153.58:2727).
 - Приложение имеет возможность масштабирования и репликации через DockerCompose.
 - Для балансировки нагрузки между репликациями используется Nginx.
 - Конфигурация Nginx (`nginx.conf`) проксирует запросы к Flask.
