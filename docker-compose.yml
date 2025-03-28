@@ -51,17 +51,12 @@ services:
   grafana:
     image: grafana/grafana:latest
     environment:
-      - GF_SERVER_PROTOCOL=https
+      - GF_SERVER_PROTOCOL=http
       - GF_SERVER_DOMAIN=zolotarev.tech
-      - GF_SERVER_ROOT_URL=https://zolotarev.tech/grafana
+      - GF_SERVER_ROOT_URL=%(protocol)s://%(domain)s:%(http_port)s/grafana
       - GF_SERVER_SERVE_FROM_SUB_PATH=true
-      - GF_USERS_ALLOW_SIGN_UP=false
-      - GF_AUTH_DISABLE_LOGIN_FORM=false
-      - GF_SECURITY_ALLOW_EMBEDDING=true
-      - GF_PATHS_CONFIG=/etc/grafana/grafana.ini
-      - GF_PATHS_DATA=/var/lib/grafana
-      - GF_PATHS_LOGS=/var/log/grafana
-    user: "472"
+      - GF_SECURITY_COOKIE_SECURE=true
+      - GF_SECURITY_COOKIE_SAMESITE=none
     networks:
       - my_network
     volumes:
