@@ -10,7 +10,7 @@ services:
     networks:
       - my_network
     deploy:
-      replicas: 1
+      replicas: 3
     logging:
       driver: loki
       options:
@@ -21,13 +21,10 @@ services:
     image: nginx:latest
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
-      - /etc/letsencrypt:/etc/letsencrypt:ro
     ports:
       - "80:80"
-      - "443:443"
     depends_on:
       - flask-app
-      - grafana
     networks:
       - my_network
     logging:
@@ -46,28 +43,6 @@ services:
           - static_labels:
               app: nginx
 
-  grafana:
-    image: grafana/grafana:latest
-    environment:
-      - GF_SERVER_ROOT_URL=https://zolotarev.tech/grafana
-      - GF_SERVER_SERVE_FROM_SUB_PATH=true
-      - GF_SERVER_DOMAIN=zolotarev.tech
-      - GF_SECURITY_COOKIE_SECURE=true
-      - GF_SERVER_ENABLE_GZIP=true
-    networks:
-      - my_network
-    ports:
-      - "3000:3000"
-    volumes:
-      - grafana_data:/var/lib/grafana
-      - grafana_config:/etc/grafana
-      - grafana_logs:/var/log/grafana
-    logging:
-      driver: loki
-      options:
-        loki-url: "http://loki:3100/loki/api/v1/push"
-        loki-external-labels: "job=grafana"
-
   prometheus:
     image: prom/prometheus:latest
     volumes:
@@ -81,6 +56,23 @@ services:
       options:
         loki-url: "http://loki:3100/loki/api/v1/push"
         loki-external-labels: "job=prometheus"
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+      - loki
+    networks:
+      - my_network
+    volumes:
+      - grafana_data:/var/lib/grafana
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://loki:3100/loki/api/v1/push"
+        loki-external-labels: "job=grafana"
 
   loki:
     image: grafana/loki:latest
@@ -99,10 +91,4 @@ networks:
 
 volumes:
   grafana_data:
-    driver: local
-  grafana_config:
-    driver: local
-  grafana_logs:
-    driver: local
   loki_data:
-    driver: local
