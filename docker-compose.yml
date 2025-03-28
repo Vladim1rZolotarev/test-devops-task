@@ -27,6 +27,7 @@ services:
       - "443:443"
     depends_on:
       - flask-app
+      - grafana # Добавляем зависимость от Grafana
     networks:
       - my_network
     logging:
@@ -45,6 +46,23 @@ services:
           - static_labels:
               app: nginx
 
+  grafana:
+    image: grafana/grafana:latest
+    environment:
+      - GF_SERVER_ROOT_URL=https://zolotarev.tech/grafana
+      - GF_SERVER_SERVE_FROM_SUB_PATH=true
+    expose:
+      - "3000"
+    networks:
+      - my_network
+    volumes:
+      - grafana_data:/var/lib/grafana
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://loki:3100/loki/api/v1/push"
+        loki-external-labels: "job=grafana"
+
   prometheus:
     image: prom/prometheus:latest
     volumes:
@@ -58,23 +76,6 @@ services:
       options:
         loki-url: "http://loki:3100/loki/api/v1/push"
         loki-external-labels: "job=prometheus"
-
-  grafana:
-    image: grafana/grafana:latest
-    ports:
-      - "3000:3000"
-    depends_on:
-      - prometheus
-      - loki
-    networks:
-      - my_network
-    volumes:
-      - grafana_data:/var/lib/grafana
-    logging:
-      driver: loki
-      options:
-        loki-url: "http://loki:3100/loki/api/v1/push"
-        loki-external-labels: "job=grafana"
 
   loki:
     image: grafana/loki:latest
