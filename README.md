@@ -48,7 +48,7 @@ docker compose up --build -d
 ```
 
 ### Доступ к сервисам:
-- WEB-приложение/CV сайт (проксируется через Nginx): `http://localhost:2727`
+- WEB-приложение/CV сайт (проксируется через Nginx): `http://localhost`
 - Grafana (метрики и логи): `http://localhost:3000`
 
 ## Выполненные задачи
@@ -57,7 +57,7 @@ docker compose up --build -d
 - Разработано WEB-приложение, представляющее собой Сайт СV (Python + Flask - бэкенд, HTML + CSS - фронтенд).
 - Создан `Dockerfile` для сборки образа WEB-приложения.
 - Собранный образ опубликован на [DockerHub](https://hub.docker.com/repository/docker/vladim1rzolotarev/flask-app/general).
-- Запуск контейнера осуществляется на [VDS Yandex Cloud](http://89.169.153.58:2727).
+- Запуск контейнера осуществляется на [VDS Yandex Cloud](http://zolotarev.tech/).
 - Приложение имеет возможность масштабирования и репликации через DockerCompose.
 - Для балансировки нагрузки между репликациями используется Nginx.
 - Конфигурация Nginx (`nginx.conf`) проксирует запросы к Flask.
@@ -110,7 +110,7 @@ docker compose up --build -d
 - Grafana подключается к Prometheus и визуализирует данные
 
 #### Процесс просмотра данных Prometheus в Grafana:
-1. Войти в [Grafana](http://89.169.153.58:3000)
+1. Войти в [Grafana](http://localhost:3000)
 2. Перейти в `Configuration → Data Sources`
 3. Нажать `Add data source` → выбрать `Prometheus`
 4. В поле URL указать: `http://prometheus:9090`
@@ -124,7 +124,7 @@ docker compose up --build -d
 - Grafana подключается к Loki и позволяет просматривать логи
 
 #### Добавление Loki в Grafana
-1. Войти в [Grafana](http://89.169.153.58:3000)
+1. Войти в [Grafana](http://localhost:3000)
 2. Перейти в `Configuration → Data Sources`
 3. Нажать `Add data source` → выбрать `Loki`
 4. В поле URL указать: `http://loki:3100`
