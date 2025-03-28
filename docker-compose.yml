@@ -1,4 +1,60 @@
+version: '3.8'
+
 services:
+  loki:
+    image: grafana/loki:latest
+    volumes:
+      - ./loki-config.yml:/etc/loki/local-config.yml
+      - loki_data:/loki
+    ports:
+      - "3100:3100"
+    networks:
+      - my_network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s http://localhost:3100/ready | grep ready"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - my_network
+    depends_on:
+      loki:
+        condition: service_healthy
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:latest
+    environment:
+      - GF_SERVER_ROOT_URL=https://zolotarev.tech/grafana
+      - GF_SERVER_SERVE_FROM_SUB_PATH=true
+      - GF_SERVER_DOMAIN=zolotarev.tech
+      - GF_SECURITY_COOKIE_SECURE=true
+      - GF_SERVER_ENABLE_GZIP=true
+      - GF_INSTALL_PLUGINS=grafana-loki
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - grafana_config:/etc/grafana
+    networks:
+      - my_network
+    depends_on:
+      loki:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s http://localhost:3000/api/health | grep ok"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+
   flask-app:
     image: vladim1rzolotarev/flask-app:latest
     build:
@@ -11,11 +67,10 @@ services:
       - my_network
     deploy:
       replicas: 1
-    logging:
-      driver: loki
-      options:
-        loki-url: "http://loki:3100/loki/api/v1/push"
-        loki-external-labels: "job=flask-app,container_name={{.Name}}"
+    depends_on:
+      loki:
+        condition: service_healthy
+    restart: unless-stopped
 
   nginx:
     image: nginx:latest
@@ -25,81 +80,19 @@ services:
     ports:
       - "80:80"
       - "443:443"
-    depends_on:
-      - flask-app
-      - grafana
     networks:
       - my_network
-    logging:
-      driver: loki
-      options:
-        loki-url: "http://loki:3100/loki/api/v1/push"
-        loki-external-labels: "job=nginx,container_name={{.Name}}"
-        loki-pipeline-stages: |
-          - json:
-              expressions:
-                remote_addr:
-                request:
-                status:
-          - labels:
-              status:
-          - static_labels:
-              app: nginx
-
-  grafana:
-    image: grafana/grafana:latest
-    environment:
-      - GF_SERVER_ROOT_URL=https://zolotarev.tech/grafana
-      - GF_SERVER_SERVE_FROM_SUB_PATH=true
-      - GF_SERVER_DOMAIN=zolotarev.tech
-      - GF_SECURITY_COOKIE_SECURE=true
-      - GF_SERVER_ENABLE_GZIP=true
-    networks:
-      - my_network
-    ports:
-      - "3000:3000"
-    volumes:
-      - grafana_data:/var/lib/grafana
-      - grafana_config:/etc/grafana
-      - grafana_logs:/var/log/grafana
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
     depends_on:
-      loki:
+      grafana:
         condition: service_healthy
-    logging:
-      driver: loki
-      options:
-        loki-url: "http://loki:3100/loki/api/v1/push"
-        loki-external-labels: "job=grafana"
-
-  prometheus:
-    image: prom/prometheus:latest
-    volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
-    ports:
-      - "9090:9090"
-    networks:
-      - my_network
-    logging:
-      driver: loki
-      options:
-        loki-url: "http://loki:3100/loki/api/v1/push"
-        loki-external-labels: "job=prometheus"
-
-  loki:
-    image: grafana/loki:latest
-    volumes:
-      - ./loki-config.yml:/etc/loki/local-config.yml
-      - loki_data:/loki
-    ports:
-      - "3100:3100"
-    restart: always
-    networks:
-      - my_network
+      flask-app:
+        condition: service_started
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s http://localhost:80 || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
 
 networks:
   my_network:
@@ -111,10 +104,5 @@ networks:
 
 volumes:
   grafana_data:
-    driver: local
   grafana_config:
-    driver: local
-  grafana_logs:
-    driver: local
   loki_data:
-    driver: local
