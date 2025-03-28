@@ -1,4 +1,5 @@
 services:
+
   loki:
     image: grafana/loki:latest
     volumes:
@@ -8,12 +9,6 @@ services:
       - "3100:3100"
     networks:
       - my_network
-    healthcheck:
-      test: ["CMD-SHELL", "curl -s http://localhost:3100/ready | grep ready"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-    restart: unless-stopped
 
   prometheus:
     image: prom/prometheus:latest
