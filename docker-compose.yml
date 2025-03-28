@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   flask-app:
     image: vladim1rzolotarev/flask-app:latest
@@ -27,7 +29,7 @@ services:
       - "443:443"
     depends_on:
       - flask-app
-      - grafana # Добавляем зависимость от Grafana
+      - grafana
     networks:
       - my_network
     logging:
@@ -49,14 +51,28 @@ services:
   grafana:
     image: grafana/grafana:latest
     environment:
+      - GF_SERVER_PROTOCOL=https
+      - GF_SERVER_DOMAIN=zolotarev.tech
       - GF_SERVER_ROOT_URL=https://zolotarev.tech/grafana
       - GF_SERVER_SERVE_FROM_SUB_PATH=true
-    expose:
-      - "3000"
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_AUTH_DISABLE_LOGIN_FORM=false
+      - GF_SECURITY_ALLOW_EMBEDDING=true
+      - GF_PATHS_CONFIG=/etc/grafana/grafana.ini
+      - GF_PATHS_DATA=/var/lib/grafana
+      - GF_PATHS_LOGS=/var/log/grafana
+    user: "472"
     networks:
       - my_network
     volumes:
       - grafana_data:/var/lib/grafana
+      - grafana_config:/etc/grafana
+      - grafana_logs:/var/log/grafana
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     logging:
       driver: loki
       options:
@@ -94,4 +110,10 @@ networks:
 
 volumes:
   grafana_data:
+    driver: local
+  grafana_config:
+    driver: local
+  grafana_logs:
+    driver: local
   loki_data:
+    driver: local
