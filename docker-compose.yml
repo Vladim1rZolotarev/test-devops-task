@@ -11,11 +11,6 @@ services:
       - my_network
     deploy:
       replicas: 1
-    logging:
-      driver: loki
-      options:
-        loki-url: "http://loki:3100/loki/api/v1/push"
-        loki-external-labels: "job=flask-app,container_name={{.Name}}"
 
   nginx:
     image: nginx:latest
@@ -29,21 +24,6 @@ services:
       - flask-app
     networks:
       - my_network
-    logging:
-      driver: loki
-      options:
-        loki-url: "http://loki:3100/loki/api/v1/push"
-        loki-external-labels: "job=nginx,container_name={{.Name}}"
-        loki-pipeline-stages: |
-          - json:
-              expressions:
-                remote_addr:
-                request:
-                status:
-          - labels:
-              status:
-          - static_labels:
-              app: nginx
 
   prometheus:
     image: prom/prometheus:latest
@@ -53,11 +33,6 @@ services:
       - "9090:9090"
     networks:
       - my_network
-    logging:
-      driver: loki
-      options:
-        loki-url: "http://loki:3100/loki/api/v1/push"
-        loki-external-labels: "job=prometheus"
 
   grafana:
     image: grafana/grafana:latest
@@ -70,11 +45,6 @@ services:
       - my_network
     volumes:
       - grafana_data:/var/lib/grafana
-    logging:
-      driver: loki
-      options:
-        loki-url: "http://loki:3100/loki/api/v1/push"
-        loki-external-labels: "job=grafana"
 
   loki:
     image: grafana/loki:latest
