@@ -1,27 +1,16 @@
-version: '3.8'
-
 services:
   flask-app:
-    image: vladim1rzolotarev/flask-app:${TAG:-latest}
+    image: vladim1rzolotarev/flask-app:latest
     build:
       context: .
-      # Ускоряем сборку за счет кэширования
-      cache_from:
-        - vladim1rzolotarev/flask-app:${TAG:-latest}
+    expose:
+      - "5000"
     environment:
-      FLASK_ENV: production
-      # Оптимизация для graceful shutdown
-      FLASK_SERVER_SHUTDOWN_TIMEOUT: 10
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
-      interval: 10s
-      timeout: 3s
-      retries: 3
-      start_period: 5s
-    stop_grace_period: 10s
-    stop_signal: SIGTERM
+      - FLASK_ENV=production
     networks:
       - my_network
+    deploy:
+      replicas: 1
     logging:
       driver: loki
       options:
@@ -29,7 +18,7 @@ services:
         loki-external-labels: "job=flask-app,container_name={{.Name}}"
 
   nginx:
-    image: nginx:alpine  # Используем более легкий образ
+    image: nginx:latest
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - /etc/letsencrypt:/etc/letsencrypt:ro
@@ -37,9 +26,7 @@ services:
       - "80:80"
       - "443:443"
     depends_on:
-      flask-app:
-        condition: service_healthy
-    stop_grace_period: 5s
+      - flask-app
     networks:
       - my_network
     logging:
@@ -64,7 +51,6 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
-    stop_grace_period: 5s
     networks:
       - my_network
     logging:
@@ -74,15 +60,12 @@ services:
         loki-external-labels: "job=prometheus"
 
   grafana:
-    image: grafana/grafana-oss:latest  # Официальный образ с открытым исходным кодом
+    image: grafana/grafana:latest
     ports:
       - "3000:3000"
     depends_on:
-      prometheus:
-        condition: service_started
-      loki:
-        condition: service_started
-    stop_grace_period: 5s
+      - prometheus
+      - loki
     networks:
       - my_network
     volumes:
@@ -95,23 +78,19 @@ services:
 
   loki:
     image: grafana/loki:latest
-    command: -config.file=/etc/loki/local-config.yml
     volumes:
       - ./loki-config.yml:/etc/loki/local-config.yml
       - loki_data:/loki
     ports:
       - "3100:3100"
-    stop_grace_period: 5s
+    restart: always
     networks:
       - my_network
 
 networks:
   my_network:
     driver: bridge
-    attachable: true
 
 volumes:
   grafana_data:
-    driver: local
   loki_data:
-    driver: local
