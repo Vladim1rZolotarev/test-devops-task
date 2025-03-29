@@ -11,12 +11,16 @@ services:
       - my_network
     deploy:
       replicas: 1
+    labels:
+      - "prometheus-job=flask-app"
+      - "prometheus-port=5000"
 
   nginx:
     image: nginx:latest
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - /etc/letsencrypt:/etc/letsencrypt:ro
+      - ./nginx/logs:/var/log/nginx
     ports:
       - "80:80"
       - "443:443"
@@ -24,6 +28,19 @@ services:
       - flask-app
     networks:
       - my_network
+    labels:
+      - "prometheus-job=nginx"
+
+  nginx-exporter:
+    image: nginx/nginx-prometheus-exporter:latest
+    ports:
+      - "9113:9113"
+    command:
+      - '-nginx.scrape-uri=http://nginx/basic_status'
+    networks:
+      - my_network
+    depends_on:
+      - nginx
 
   prometheus:
     image: prom/prometheus:latest
@@ -33,6 +50,9 @@ services:
       - "9090:9090"
     networks:
       - my_network
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--web.enable-lifecycle'
 
   grafana:
     image: grafana/grafana:latest
@@ -63,6 +83,18 @@ services:
     restart: always
     networks:
       - my_network
+
+  promtail:
+    image: grafana/promtail:latest
+    volumes:
+      - ./nginx/logs:/var/log/nginx
+      - ./promtail-config.yml:/etc/promtail/config.yml
+    command:
+      - '-config.file=/etc/promtail/config.yml'
+    networks:
+      - my_network
+    depends_on:
+      - loki
 
 networks:
   my_network:
