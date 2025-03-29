@@ -9,22 +9,22 @@
 
 ```
 test-devops-task/
-   ├── .github/                 # Директория GitHub Actions для CI/CD
-     ├── workflows/             # Директория workflows
-       ├── ci-cd.yml            # Конфигурация CI/CD
-   ├── app/                     # Директория WEB-приложения
-     ├── static/                # Директория CSS стилей
-       ├── styles.css           # CSS стили ждя WEB-приложения
-     ├── templates/             # Директория CSS стилей
-       ├── styles.css           # CSS стили ждя WEB-приложения
-     ├── main.py                # Код Flask-приложения
-     ├── requirements.txt       # Зависимости для подгрузки библиотек
-   ├── Dockerfile               # Сборка Flask-приложения
-   ├── README.md                # Документация проекта
-   ├── docker-compose.yml       # Конфигурация контейнеров
-   ├── loki-config.yml          # Конфигурация Loki
-   ├── nginx.conf               # Конфигурация Nginx
-   └── prometheus.yml           # Конфигурация Prometheus
+├── .github/                 # Директория GitHub Actions (CI/CD)
+|   └── workflows/           
+|       └── ci-cd.yml        # Конфигурация CI/CD
+├── app/                     # Директория WEB-приложения
+|   ├── static/              # Директория CSS
+|   |   └── styles.css       # CSS для WEB-приложения
+|   ├── templates/           # Директория HTML
+|   |   └── index.html       # Главная страница WEB-приложения
+|   ├── main.py              # Код Flask-приложения
+|   ├── requirements.txt     # Зависимости Python
+├── Dockerfile               # Сборка Flask-приложения
+├── README.md                # Документация
+├── docker-compose.yml       # Конфигурация контейнеров
+├── loki-config.yml          # Конфигурация Loki (логи)
+├── nginx.conf               # Конфигурация Nginx (прокси)
+└── prometheus.yml           # Конфигурация Prometheus (метрики)
 ```
 
 ## Установка и запуск
