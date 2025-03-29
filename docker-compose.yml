@@ -45,6 +45,13 @@ services:
       - my_network
     volumes:
       - grafana_data:/var/lib/grafana
+      - /etc/letsencrypt/live/zolotarev.tech/fullchain.pem:/etc/grafana/certs/fullchain.pem:ro
+      - /etc/letsencrypt/live/zolotarev.tech/privkey.pem:/etc/grafana/certs/privkey.pem:ro
+    environment:
+      - GF_SERVER_PROTOCOL=https
+      - GF_SERVER_CERT_FILE=/etc/grafana/certs/fullchain.pem
+      - GF_SERVER_CERT_KEY=/etc/grafana/certs/privkey.pem
+      - GF_SERVER_DOMAIN=zolotarev.tech
 
   loki:
     image: grafana/loki:latest
