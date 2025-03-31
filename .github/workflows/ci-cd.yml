@@ -5,6 +5,8 @@ on:
     branches:
       - feature  # Деплой на staging
       - master     # Деплой на production
+    paths-ignore:
+      - 'README.md'
 
 jobs:
   deploy:
