@@ -48,8 +48,8 @@ docker compose up --build -d
 ```
 
 ### Доступ к сервисам:
-- WEB-приложение/CV сайт (проксируется через Nginx): [https://zolotarev.tech](https://zolotarev.tech)
-- Grafana (метрики и логи): [https://zolotarev.tech:3000](https://zolotarev.tech:3000)
+- WEB-приложение/CV сайт (проксируется через Nginx): [zolotarev.tech](https://zolotarev.tech)
+- Grafana (метрики и логи): [zolotarev.tech:3000](https://zolotarev.tech:3000)
 
 ## Выполненные задачи
 
@@ -57,11 +57,11 @@ docker compose up --build -d
 - Разработано WEB-приложение, представляющее собой Сайт СV (Python + Flask - бэкенд, HTML + CSS - фронтенд).
 - Создан `Dockerfile` для сборки образа WEB-приложения.
 - Собранный образ опубликован на [DockerHub](https://hub.docker.com/repository/docker/vladim1rzolotarev/flask-app/general).
-- Запуск контейнера осуществляется на [VDS Yandex Cloud](http://zolotarev.tech).
-- Приложение имеет возможность масштабирования и репликации через DockerCompose.
-- Для балансировки нагрузки между репликациями используется Nginx.
-- Конфигурация Nginx (`nginx.conf`) проксирует запросы к Flask.
-- Nginx распределяет трафик между репликами приложения.
+- Инфраструктура развёрнута на VDS Yandex Cloud.
+- Приложение имеет возможность масштабирования и репликации через `DockerCompose`.
+- Для балансировки нагрузки между репликациями используется `Nginx`.
+- Конфигурация `Ngin` проксирует запросы к `Flask`.
+- `Nginx` распределяет трафик между репликами приложения.
 
 ### 2. Автоматический деплой на staging/production окружение
 
@@ -77,7 +77,7 @@ docker compose up --build -d
    docker push $DOCKER_IMAGE:$TAG
    ```
 3. Деплой на сервер:
-   - Подключение по SSH к целевому серверу
+   - Подключение по `SSH` к целевому серверу
    - Остановка текущих контейнеров
    - Запуск новых контейнеров с новым образом
    - Проверка успешного запуска контейнеров (если проверка не прошла запускается Rollback)
@@ -110,7 +110,7 @@ docker compose up --build -d
 - Grafana подключается к Prometheus и визуализирует данные
 
 #### Процесс просмотра данных Prometheus в Grafana:
-1. Войти в [Grafana](http://localhost:3000)
+1. Войти в [Grafana](https://zolotarev.tech:3000)
 2. Перейти в `Configuration → Data Sources`
 3. Нажать `Add data source` → выбрать `Prometheus`
 4. В поле URL указать: `http://prometheus:9090`
@@ -124,7 +124,7 @@ docker compose up --build -d
 - Grafana подключается к Loki и позволяет просматривать логи
 
 #### Добавление Loki в Grafana
-1. Войти в [Grafana](http://localhost:3000)
+1. Войти в [Grafana](https://zolotarev.tech:3000)
 2. Перейти в `Configuration → Data Sources`
 3. Нажать `Add data source` → выбрать `Loki`
 4. В поле URL указать: `http://loki:3100`
