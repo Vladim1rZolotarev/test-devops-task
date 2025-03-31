@@ -48,8 +48,8 @@ docker compose up --build -d
 ```
 
 ### Доступ к сервисам:
-- WEB-приложение/CV сайт (проксируется через Nginx): `http://localhost`
-- Grafana (метрики и логи): `http://localhost:3000`
+- WEB-приложение/CV сайт (проксируется через Nginx): [https://zolotarev.tech](https://zolotarev.tech)
+- Grafana (метрики и логи): [https://zolotarev.tech:3000](https://zolotarev.tech:3000)
 
 ## Выполненные задачи
 
