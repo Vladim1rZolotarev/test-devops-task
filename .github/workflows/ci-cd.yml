@@ -51,6 +51,7 @@ jobs:
         key: ${{ secrets.SERVER_SSH_KEY }}
         script: |
           cd ~/test-devops-task
+          sudo docker rmi vladim1rzolotarev/flask-app
           git pull origin master
           sleep 3
           export TAG=${{ steps.tag.outputs.TAG }}
@@ -62,7 +63,7 @@ jobs:
           echo "Starting new containers..."
           sudo docker compose up -d
           echo "Checking container health..."
-          sleep 10
+          sleep 5
           if ! sudo docker ps | grep -q "flask-app"; then
             echo "Deployment failed! Triggering rollback..."
             exit 1  # Запускаем rollback

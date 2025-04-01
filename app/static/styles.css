@@ -6,8 +6,8 @@ body {
 
 /* Кастомные цвета */
 :root {
-    --custom-green: #009b77;
-    --custom-green-light: #009b77;
+    --custom-green: #28a745;
+    --custom-dark: #212529;
 }
 
 .bg-success-custom {
@@ -110,14 +110,74 @@ body {
     font-weight: 500;
 }
 
+/* Timeline для опыта работы */
+.timeline {
+    position: relative;
+    padding-left: 1.5rem;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 0;
+    height: 100%;
+    width: 2px;
+    background: var(--custom-green);
+}
+
+.timeline-item {
+    position: relative;
+    padding-bottom: 2rem;
+}
+
+.timeline-badge {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: var(--custom-green);
+    z-index: 1;
+}
+
+.timeline-content {
+    padding-left: 1.5rem;
+}
+
+/* Карточки проектов */
+.project-card {
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+.project-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    border-color: var(--custom-green);
+}
+
+/* Бейджи технологий */
+.tech-stack .badge {
+    font-weight: 400;
+    margin-right: 0.3rem;
+    margin-bottom: 0.3rem;
+    transition: all 0.2s;
+}
+
+.tech-stack .badge:hover {
+    transform: scale(1.05);
+}
+
 /* Адаптивность */
 @media (max-width: 768px) {
-    .progress-bar::after {
-        font-size: 0.7rem;
+    .timeline::before {
+        left: 5px;
     }
     
-    .campus-photo {
-        max-height: 100px;
-        margin-top: 1rem;
+    .timeline-badge {
+        width: 10px;
+        height: 10px;
     }
 }
