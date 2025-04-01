@@ -54,16 +54,15 @@ jobs:
           sudo docker rmi vladim1rzolotarev/flask-app
           git pull origin master
           sleep 3
-          export TAG=${{ steps.tag.outputs.TAG }}
-          export ENV=${{ steps.tag.outputs.COMPOSE_ENV }}
-          echo "Pulling latest image..."
-          sudo docker pull $DOCKER_IMAGE:$TAG
-          echo "Stopping current containers..."
+          echo "Остановка текущих контейнеров..."
           sudo docker compose down
-          echo "Starting new containers..."
+          sleep 3
+          sudo docker rmi -f vladim1rzolotarev/flask-app
+          sleep 3
+          echo "Запуск новых контейнеров..."
           sudo docker compose up -d
-          echo "Checking container health..."
-          sleep 5
+          echo "Проверка деплоя на стабильность..."
+          sleep 3
           if ! sudo docker ps | grep -q "flask-app"; then
             echo "Deployment failed! Triggering rollback..."
             exit 1  # Запускаем rollback
