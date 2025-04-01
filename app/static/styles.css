@@ -181,3 +181,14 @@ body {
         height: 10px;
     }
 }
+
+.list-unstyled li {
+    position: relative;
+    padding-left: 1.8rem;
+}
+
+.list-unstyled li i {
+    position: absolute;
+    left: 0;
+    top: 0.3rem;
+}

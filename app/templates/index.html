@@ -14,207 +14,146 @@
     <div class="container mt-4">
         <div class="row">
             <div class="col-lg-10 mx-auto">
-                
-                <!-- Header (улучшенный) -->
+
+                <!-- Header -->
                 <header class="card shadow-sm mb-4 bg-dark text-white">
                     <div class="card-body">
                         <div class="row align-items-center">
                             <div class="col-md-8">
                                 <h1 class="display-5">Vladimir Zolotarev</h1>
-                                <p class="lead">DevOps Engineer | Cloud Architect</p>
-                                <div class="d-flex flex-wrap gap-2 mt-3">
-                                    <span class="badge bg-success">AWS Certified</span>
-                                    <span class="badge bg-primary">Kubernetes</span>
-                                    <span class="badge bg-secondary">Terraform</span>
-                                </div>
-                            </div>
-                            <div class="col-md-4 text-center">
-                                <img src="https://via.placeholder.com/150" alt="Фото" class="img-fluid rounded-circle border border-3 border-success" style="max-width: 120px;">
+                                <p class="lead">DevOps Engineer</p>
                             </div>
                         </div>
                     </div>
                 </header>
 
-                <!-- Опыт работы (новый блок) -->
+                <!-- Блок "Обо мне" -->
                 <section class="card shadow-sm mb-4">
                     <div class="card-header bg-dark text-white">
-                        <h3><i class="fas fa-briefcase me-2"></i>Опыт работы</h3>
+                        <h3><i class="fas fa-user me-2"></i>Обо мне</h3>
                     </div>
-                    <div class="card-body">
-                        <div class="timeline">
-                            <!-- Пример позиции -->
-                            <div class="timeline-item">
-                                <div class="timeline-badge bg-success"></div>
-                                <div class="timeline-content">
-                                    <h5>Senior DevOps Engineer</h5>
-                                    <p class="text-muted mb-1">Компания "ТехноЛаб" | 2021 - н.в.</p>
-                                    <ul>
-                                        <li>Миграция инфраструктуры на Kubernetes (снижение затрат на 30%)</li>
-                                        <li>Реализация GitOps-подхода с ArgoCD (200+ deployments/week)</li>
-                                        <li>Настройка мониторинга: Prometheus + Grafana (150+ метрик)</li>
-                                    </ul>
-                                    <div class="tech-stack mt-2">
-                                        <span class="badge bg-light text-dark">AWS EKS</span>
-                                        <span class="badge bg-light text-dark">Terraform</span>
-                                        <span class="badge bg-light text-dark">Helm</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Добавьте другие позиции -->
-                        </div>
-                    </div>
-                </section>
 
-                <!-- Технические навыки (переработанные) -->
-                <section class="card shadow-sm mb-4">
-                    <div class="card-header bg-dark text-white">
-                        <h3><i class="fas fa-code me-2"></i>Технический стек</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <!-- Cloud -->
-                            <div class="col-md-4 mb-4">
-                                <h5 class="text-success"><i class="fas fa-cloud me-2"></i>Cloud</h5>
-                                <ul class="list-unstyled">
-                                    <li class="mb-2">AWS (EC2, S3, RDS, Lambda)</li>
-                                    <li class="mb-2">Yandex Cloud (Managed Kubernetes)</li>
-                                    <li class="mb-2">Serverless Architecture</li>
-                                </ul>
-                            </div>
-                            <!-- DevOps -->
-                            <div class="col-md-4 mb-4">
-                                <h5 class="text-success"><i class="fas fa-cogs me-2"></i>DevOps</h5>
-                                <ul class="list-unstyled">
-                                    <li class="mb-2">Docker • Podman • LXC</li>
-                                    <li class="mb-2">Kubernetes (EKS, kops)</li>
-                                    <li class="mb-2">CI/CD (GitLab CI, GitHub Actions)</li>
-                                </ul>
-                            </div>
-                            <!-- Automation -->
-                            <div class="col-md-4 mb-4">
-                                <h5 class="text-success"><i class="fas fa-robot me-2"></i>Automation</h5>
-                                <ul class="list-unstyled">
-                                    <li class="mb-2">Terraform • Pulumi</li>
-                                    <li class="mb-2">Ansible • Packer</li>
-                                    <li class="mb-2">Python • Bash</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Проекты (новый блок) -->
-                <section class="card shadow-sm mb-4">
-                    <div class="card-header bg-dark text-white">
-                        <h3><i class="fas fa-project-diagram me-2"></i>Ключевые проекты</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <!-- Проект 1 -->
-                            <div class="col-md-6 mb-4">
-                                <div class="card h-100">
-                                    <div class="card-body">
-                                        <h5 class="card-title">Миграция в Kubernetes</h5>
-                                        <p class="card-text text-muted">Полная миграция 50+ сервисов с VM-based инфраструктуры</p>
-                                        <ul class="mb-3">
-                                            <li>Снижение затрат на 40% через autoscaling</li>
-                                            <li>Zero-downtime deployment</li>
-                                        </ul>
-                                        <div class="tech-stack">
-                                            <span class="badge bg-light text-dark">K8s</span>
-                                            <span class="badge bg-light text-dark">Helm</span>
-                                            <span class="badge bg-light text-dark">AWS</span>
-                                        </div>
-                                    </div>
-                                    <div class="card-footer bg-transparent">
-                                        <a href="#" class="btn btn-sm btn-outline-success">Case Study →</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Проект 2 -->
-                            <div class="col-md-6 mb-4">
-                                <div class="card h-100">
-                                    <div class="card-body">
-                                        <h5 class="card-title">GitOps Pipeline</h5>
-                                        <p class="card-text text-muted">Реализация CI/CD для микросервисной архитектуры</p>
-                                        <ul class="mb-3">
-                                            <li>Время deployment сокращено с 30 мин до 2 мин</li>
-                                            <li>Архитектура на базе ArgoCD + Kustomize</li>
-                                        </ul>
-                                        <div class="tech-stack">
-                                            <span class="badge bg-light text-dark">ArgoCD</span>
-                                            <span class="badge bg-light text-dark">GitLab</span>
-                                            <span class="badge bg-light text-dark">Kustomize</span>
-                                        </div>
-                                    </div>
-                                    <div class="card-footer bg-transparent">
-                                        <a href="#" class="btn btn-sm btn-outline-success">Подробнее →</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- О сайте (новый блок) -->
-                <section class="card shadow-sm mb-4">
-                    <div class="card-header bg-dark text-white">
-                        <h3><i class="fas fa-laptop-code me-2"></i>О сайте</h3>
-                    </div>
-                    <div class="card-body">
-                        <p>Этот сайт-резюме разработан с использованием:</p>
-                        <div class="d-flex flex-wrap gap-2 mb-3">
-                            <span class="badge bg-dark">HTML5</span>
-                            <span class="badge bg-dark">CSS3</span>
-                            <span class="badge bg-dark">Bootstrap 5</span>
-                            <span class="badge bg-dark">Font Awesome</span>
-                            <span class="badge bg-dark">Flask (Python)</span>
-                        </div>
-                        <p class="mb-1"><strong>Особенности:</strong></p>
-                        <ul>
-                            <li>Адаптивный дизайн (mobile-first)</li>
-                            <li>Микроанимации для UX</li>
-                            <li>Оптимизированная печатная версия</li>
+                    <!-- Текст -->
+                    <div class="col-md-9">
+                        <p class="lead">Я системный/сетевой администратор. Активно развиваюсь в направлении DevOps. У
+                            меня два красных диплома по технической специальности и опыт работы с современными
+                            технологиями для управления инфраструктурой.</p>
+                        <ul class="list-unstyled">
+                            <li class="mb-2">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                Активно участвую в IT-мероприятиях
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                Изучаю инструменты автоматизации инфраструктуры
+                            </li>
+                            <li>
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                Разрабатываю свои собственные проекты
+                            </li>
                         </ul>
-                        <a href="https://github.com/yourusername/cv-website" class="btn btn-dark mt-2">
-                            <i class="fab fa-github me-2"></i>Исходный код
-                        </a>
                     </div>
-                </section>
-
-                <!-- Контакты (улучшенные) -->
-                <section class="card shadow-sm">
-                    <div class="card-header bg-dark text-white">
-                        <h3><i class="fas fa-envelope me-2"></i>Контакты</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="row g-3">
-                            <div class="col-md-3 col-6">
-                                <a href="mailto:thevz27@gmail.com" class="btn btn-outline-dark w-100">
-                                    <i class="fas fa-envelope me-2"></i>Email
-                                </a>
-                            </div>
-                            <div class="col-md-3 col-6">
-                                <a href="https://t.me/Vladim1rZolotarev" class="btn btn-outline-primary w-100">
-                                    <i class="fab fa-telegram me-2"></i>Telegram
-                                </a>
-                            </div>
-                            <div class="col-md-3 col-6">
-                                <a href="https://github.com/Vladim1rZolotarev" class="btn btn-outline-dark w-100">
-                                    <i class="fab fa-github me-2"></i>GitHub
-                                </a>
-                            </div>
-                            <div class="col-md-3 col-6">
-                                <a href="https://linkedin.com/in/yourprofile" class="btn btn-outline-primary w-100">
-                                    <i class="fab fa-linkedin me-2"></i>LinkedIn
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
             </div>
         </div>
+        </section>
+
+
+        <!-- Технические навыки -->
+        <section class="card shadow-sm mb-4">
+            <div class="card-header bg-dark text-white">
+                <h3><i class="fas fa-code me-2"></i>Технический стек</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <!-- Cloud -->
+                    <div class="col-md-4 mb-4">
+                        <h5 class="text-success"><i class="fas fa-cloud me-2"></i>Cloud</h5>
+                        <ul class="list-unstyled">
+                            <li class="mb-2">Yandex Cloud (Managed Kubernetes)</li>
+                        </ul>
+                    </div>
+                    <!-- DevOps -->
+                    <div class="col-md-4 mb-4">
+                        <h5 class="text-success"><i class="fas fa-cogs me-2"></i>DevOps</h5>
+                        <ul class="list-unstyled">
+                            <li class="mb-2">Docker • Podman • LXC</li>
+                            <li class="mb-2">Kubernetes (EKS, kops)</li>
+                            <li class="mb-2">CI/CD (GitLab CI, GitHub Actions)</li>
+                        </ul>
+                    </div>
+                    <!-- Automation -->
+                    <div class="col-md-4 mb-4">
+                        <h5 class="text-success"><i class="fas fa-robot me-2"></i>Automation</h5>
+                        <ul class="list-unstyled">
+                            <li class="mb-2">Terraform • Pulumi</li>
+                            <li class="mb-2">Ansible • Packer</li>
+                            <li class="mb-2">Python • Bash</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- О сайте -->
+        <section class="card shadow-sm mb-4">
+            <div class="card-header bg-dark text-white">
+                <h3><i class="fas fa-laptop-code me-2"></i>О сайте</h3>
+            </div>
+            <div class="card-body">
+                <p>Этот сайт-резюме разработан с использованием:</p>
+                <div class="d-flex flex-wrap gap-2 mb-3">
+                    <span class="badge bg-dark">HTML5</span>
+                    <span class="badge bg-dark">CSS3</span>
+                    <span class="badge bg-dark">Bootstrap 5</span>
+                    <span class="badge bg-dark">Font Awesome</span>
+                    <span class="badge bg-dark">Flask (Python)</span>
+                </div>
+                <p class="mb-1"><strong>Технологии</strong></p>
+                <ul>
+                    <li>VDS Yandex Cloud</li>
+                    <li>Docker Compose</li>
+                    <li>CI/CD</li>
+                </ul>
+                <a href="https://github.com/Vladim1rZolotarev/test-devops-task.git" class="btn btn-dark mt-2">
+                    <i class="fab fa-github me-2"></i>Репозиторий
+                </a>
+            </div>
+        </section>
+
+        <!-- Контакты -->
+        <section class="card shadow-sm">
+            <div class="card-header bg-dark text-white">
+                <h3><i class="fas fa-envelope me-2"></i>Контакты</h3>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-3 col-6">
+                        <a href="mailto:thevz27@gmail.com" class="btn btn-outline-dark w-100">
+                            <i class="fas fa-envelope me-2"></i>Email
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <a href="https://t.me/Vladim1rZolotarev" class="btn btn-outline-primary w-100">
+                            <i class="fab fa-telegram me-2"></i>Telegram
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <a href="https://github.com/Vladim1rZolotarev" class="btn btn-outline-dark w-100">
+                            <i class="fab fa-github me-2"></i>GitHub
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <a href="https://linkedin.com/in/yourprofile" class="btn btn-outline-primary w-100">
+                            <i class="fab fa-linkedin me-2"></i>LinkedIn
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+    </div>
     </div>
 </body>
+
 </html>
