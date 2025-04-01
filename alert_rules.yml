@@ -1,0 +1,31 @@
+groups:
+- name: nginx
+  rules:
+  - alert: NginxDown
+    expr: nginx_up == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "NGINX is DOWN!"
+      description: "NGINX не отвечает!"
+
+  - alert: High5xxErrors
+    expr: sum(rate(nginx_http_requests_total{status=~"5.."}[1m])) by (host) > 10
+    for: 3m
+    labels:
+      severity: warning
+    annotations:
+      summary: "High 5xx Errors ({{ $labels.host }})"
+      description: "5xx rate: {{ $value }}/min"
+
+- name: flask
+  rules:
+  - alert: FlaskAppDown
+    expr: up{job="flask-app"} == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Flask App is DOWN!"
+      description: "Flask-приложение не отвечает!"

@@ -42,10 +42,22 @@ services:
     depends_on:
       - nginx
 
+  alertmanager:
+    image: prom/alertmanager:latest
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml
+    networks:
+      - my_network
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+
   prometheus:
     image: prom/prometheus:latest
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./alert_rules.yml:/etc/prometheus/alert_rules.yml
     ports:
       - "9090:9090"
     networks:
@@ -53,6 +65,8 @@ services:
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--web.enable-lifecycle'
+    depends_on:
+      - alertmanage
 
   grafana:
     image: grafana/grafana:latest

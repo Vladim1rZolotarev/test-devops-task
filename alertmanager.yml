@@ -1,0 +1,22 @@
+route:
+  receiver: 'telegram'
+  group_by: [alertname]
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 1h
+
+receivers:
+- name: 'telegram'
+  telegram_configs:
+  - api_url: 'https://api.telegram.org'
+    bot_token: '7930218950:AAF797elX4qU-o1ci-_BnLshUbsS23aa6BQ'
+    chat_id: 6356340229
+    send_resolved: true
+    message: |
+      {{ range .Alerts }}
+        *{{ .Status | title }}*: {{ .Annotations.summary }}
+        *Description*: {{ .Annotations.description }}
+        *Labels*:
+        {{ range .Labels.SortedPairs }}• {{ .Name }} = `{{ .Value }}`
+        {{ end }}
+      {{ end }}
