@@ -10,16 +10,6 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        .card-section {
-            min-height: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .card-body {
-            flex-grow: 1;
-        }
-
         .tech-stack-col {
             margin-bottom: 1rem;
         }
@@ -28,6 +18,15 @@
             .tech-stack-col {
                 margin-bottom: 0;
             }
+        }
+
+        .card {
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-img {
+            max-width: 150px;
+            border: 3px solid #198754;
         }
     </style>
 </head>
@@ -39,25 +38,19 @@
 
                 <header class="card shadow-sm mb-4 bg-dark text-white">
                     <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-md-12">
-                                <h1 class="display-5">Vladimir Zolotarev</h1>
-                                <p class="lead">DevOps Engineer</p>
-                            </div>
-                        </div>
+                        <h1 class="display-5 mb-1">Vladimir Zolotarev</h1>
+                        <p class="lead mb-0">DevOps Engineer</p>
                     </div>
                 </header>
 
-                <section class="card shadow-sm mb-4 card-section">
+                <section class="card shadow-sm mb-4">
                     <div class="card-header bg-dark text-white">
-                        <h3><i class="fas fa-user me-2"></i>Обо мне</h3>
+                        <h3 class="mb-0"><i class="fas fa-user me-2"></i>Обо мне</h3>
                     </div>
                     <div class="card-body">
                         <div class="row align-items-center">
                             <div class="col-md-3 text-center mb-3 mb-md-0">
-                                <img src="" alt=""
-                                    class="img-fluid rounded-circle border border-3 border-success-custom"
-                                    style="max-width: 150px;">
+                                <img src="" alt="" class="img-fluid rounded-circle profile-img">
                             </div>
                             <div class="col-md-9">
                                 <p class="lead">Я системный/сетевой администратор, активно развиваюсь в направлении
@@ -86,9 +79,9 @@
                     </div>
                 </section>
 
-                <section class="card shadow-sm mb-4 card-section">
+                <section class="card shadow-sm mb-4">
                     <div class="card-header bg-dark text-white">
-                        <h3><i class="fas fa-code me-2"></i>Технический стек</h3>
+                        <h3 class="mb-0"><i class="fas fa-code me-2"></i>Технический стек</h3>
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -141,9 +134,9 @@
                     </div>
                 </section>
 
-                <section class="card shadow-sm mb-4 card-section">
+                <section class="card shadow-sm mb-4">
                     <div class="card-header bg-dark text-white">
-                        <h3><i class="fas fa-laptop-code me-2"></i>О сайте</h3>
+                        <h3 class="mb-0"><i class="fas fa-laptop-code me-2"></i>О сайте</h3>
                     </div>
                     <div class="card-body">
                         <p>Этот сайт-резюме разработан с использованием:</p>
@@ -166,9 +159,9 @@
                     </div>
                 </section>
 
-                <section class="card shadow-sm card-section">
+                <section class="card shadow-sm">
                     <div class="card-header bg-dark text-white">
-                        <h3><i class="fas fa-envelope me-2"></i>Контакты</h3>
+                        <h3 class="mb-0"><i class="fas fa-envelope me-2"></i>Контакты</h3>
                     </div>
                     <div class="card-body">
                         <div class="row g-3">
