@@ -1,194 +1,226 @@
 /* Основные стили */
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    line-height: 1.6;
-}
-
-/* Кастомные цвета */
 :root {
-    --custom-green: #28a745;
-    --custom-dark: #212529;
+    --primary: #4e73df;
+    --success: #1cc88a;
+    --info: #36b9cc;
+    --warning: #f6c23e;
+    --danger: #e74a3b;
+    --dark: #5a5c69;
+    --purple: #6f42c1;
+    --light: #f8f9fc;
 }
 
-.bg-success-custom {
-    background-color: var(--custom-green) !important;
+/* Тёмная тема */
+[data-bs-theme="dark"] {
+    --bs-body-bg: #1a1a2e;
+    --bs-body-color: #f8f9fa;
+    --bs-light: #16213e;
+    --bs-dark: #e9ecef;
+    --bs-light-rgb: 22, 33, 62;
+    --card-bg: #16213e;
 }
 
-.border-success-custom {
-    border-color: var(--custom-green) !important;
-}
-
-.text-success-custom {
-    color: var(--custom-green) !important;
-}
-
-.btn-outline-success-custom {
-    color: var(--custom-green);
-    border-color: var(--custom-green);
-}
-
-.btn-outline-success-custom:hover {
-    color: #fff;
-    background-color: var(--custom-green);
-    border-color: var(--custom-green);
-}
-
-/* Прогресс-бары */
-.progress {
-    height: 25px;
-    border-radius: 12px;
-    overflow: visible;
-    background-color: #e9ecef;
-}
-
-.progress-bar {
+body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+    color: var(--bs-body-color);
+    background-color: var(--bs-body-bg);
     position: relative;
-    border-radius: 12px;
-    animation: progress-animation 1.5s ease-in-out;
 }
 
-.progress-bar::after {
-    content: attr(aria-valuenow);
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: white;
-    font-weight: bold;
-    font-size: 0.8rem;
-}
-
-@keyframes progress-animation {
-    from { width: 0; }
+/* Анимированный фон */
+.bg-pattern {
+    background: radial-gradient(circle at 10% 20%, rgba(78, 115, 223, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
+    z-index: -1;
+    opacity: 0.5;
 }
 
 /* Карточки */
 .card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: none;
     border-radius: 0.5rem;
     overflow: hidden;
+    background-color: var(--bs-card-bg, #fff);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 1.5rem;
 }
 
 .card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
 }
 
 .card-header {
     font-weight: 600;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    background-color: transparent;
 }
 
-/* Логотип университета */
-.university-logo {
-    height: 40px;
-    filter: brightness(0) invert(1);
-    transition: transform 0.3s ease;
+/* Градиенты */
+.bg-gradient-dark {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
 }
 
-.university-logo:hover {
-    transform: rotate(-5deg) scale(1.1);
+.bg-gradient-email {
+    background: linear-gradient(135deg, #ea4335 0%, #fbbc05 100%);
 }
 
-/* Фото кампуса */
-.campus-photo {
-    border: 3px solid var(--custom-green);
-    padding: 5px;
-    background: white;
-    max-height: 120px;
-    transition: transform 0.3s ease;
+.bg-gradient-telegram {
+    background: linear-gradient(135deg, #0088cc 0%, #34aadc 100%);
 }
 
-.campus-photo:hover {
-    transform: scale(1.05);
+.bg-gradient-github {
+    background: linear-gradient(135deg, #333 0%, #6e5494 100%);
 }
 
-/* Кнопки */
-.btn {
-    transition: all 0.3s ease;
-    border-radius: 50px;
-    padding: 0.5rem 1rem;
-    font-weight: 500;
+.bg-gradient-linkedin {
+    background: linear-gradient(135deg, #0077b5 0%, #00a0dc 100%);
 }
 
-/* Timeline для опыта работы */
-.timeline {
-    position: relative;
-    padding-left: 1.5rem;
-}
-
-.timeline::before {
-    content: '';
-    position: absolute;
-    left: 7px;
-    top: 0;
-    height: 100%;
-    width: 2px;
-    background: var(--custom-green);
-}
-
-.timeline-item {
-    position: relative;
-    padding-bottom: 2rem;
-}
-
-.timeline-badge {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 15px;
-    height: 15px;
+/* Иконки в кружках */
+.icon-circle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
     border-radius: 50%;
-    background: var(--custom-green);
-    z-index: 1;
 }
 
-.timeline-content {
-    padding-left: 1.5rem;
+.icon-circle-sm {
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: 0.75rem;
 }
 
-/* Карточки проектов */
-.project-card {
+.icon-circle-lg {
+    width: 4rem;
+    height: 4rem;
+    font-size: 1.5rem;
+}
+
+/* Навигационные табы */
+.nav-tabs {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.nav-tabs .nav-link {
+    border: none;
+    color: var(--bs-secondary-color);
+    font-weight: 500;
+    padding: 1rem 1.5rem;
+}
+
+.nav-tabs .nav-link.active {
+    color: var(--primary);
+    background-color: transparent;
+    border-bottom: 3px solid var(--primary);
+}
+
+/* Контактные карточки */
+.contact-card {
     transition: all 0.3s ease;
-    border: 1px solid rgba(0,0,0,0.1);
 }
 
-.project-card:hover {
+.contact-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-    border-color: var(--custom-green);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
 }
 
-/* Бейджи технологий */
-.tech-stack .badge {
-    font-weight: 400;
-    margin-right: 0.3rem;
-    margin-bottom: 0.3rem;
-    transition: all 0.2s;
+/* Прогресс-бары */
+.progress {
+    height: 0.5rem;
+    border-radius: 0.25rem;
+    background-color: rgba(0, 0, 0, 0.05);
 }
 
-.tech-stack .badge:hover {
-    transform: scale(1.05);
+.progress-bar {
+    border-radius: 0.25rem;
+    position: relative;
+    overflow: visible;
+}
+
+.progress-bar::after {
+    content: attr(aria-valuenow) '%';
+    position: absolute;
+    right: 0;
+    top: -1.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--bs-body-color);
+}
+
+/* Анимации */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card {
+    animation: fadeIn 0.6s ease-out forwards;
+}
+
+.card:nth-child(2) {
+    animation-delay: 0.1s;
+}
+
+.card:nth-child(3) {
+    animation-delay: 0.2s;
+}
+
+.card:nth-child(4) {
+    animation-delay: 0.3s;
+}
+
+.card:nth-child(5) {
+    animation-delay: 0.4s;
 }
 
 /* Адаптивность */
 @media (max-width: 768px) {
-    .timeline::before {
-        left: 5px;
+    .display-4 {
+        font-size: 2.5rem;
     }
-    
-    .timeline-badge {
-        width: 10px;
-        height: 10px;
+
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    .icon-circle {
+        width: 2.5rem;
+        height: 2.5rem;
     }
 }
 
-.list-unstyled li {
-    position: relative;
-    padding-left: 1.8rem;
+/* Тёмная тема - дополнительные стили */
+[data-bs-theme="dark"] .card {
+    background-color: var(--card-bg);
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
 }
 
-.list-unstyled li i {
-    position: absolute;
-    left: 0;
-    top: 0.3rem;
+[data-bs-theme="dark"] .nav-tabs {
+    border-bottom-color: rgba(255, 255, 255, 0.05);
+}
+
+[data-bs-theme="dark"] .nav-tabs .nav-link {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+[data-bs-theme="dark"] .nav-tabs .nav-link.active {
+    color: var(--primary);
+}
+
+[data-bs-theme="dark"] .progress {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-bs-theme="dark"] .contact-card {
+    background-color: rgba(255, 255, 255, 0.03);
 }
