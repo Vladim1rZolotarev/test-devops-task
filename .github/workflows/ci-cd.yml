@@ -51,7 +51,6 @@ jobs:
         key: ${{ secrets.SERVER_SSH_KEY }}
         script: |
           cd ~/test-devops-task
-          sudo docker rmi vladim1rzolotarev/flask-app
           git pull origin master
           sleep 3
           echo "Остановка текущих контейнеров..."

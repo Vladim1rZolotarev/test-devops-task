@@ -36,131 +36,134 @@
                         <div class="row align-items-center">
                             <!-- Фото -->
                             <div class="col-md-3 text-center mb-3 mb-md-0">
-                                <img src="https://via.placeholder.com/200x200" 
-                                     alt="Фото"
-                                     class="img-fluid rounded-circle border border-3 border-success-custom"
-                                     style="max-width: 150px;">
+                                <img src="https://via.placeholder.com/200x200" alt="Фото"
+                                    class="img-fluid rounded-circle border border-3 border-success-custom"
+                                    style="max-width: 150px;">
                             </div>
-                    <!-- Текст -->
-                    <div class="col-md-9">
-                        <p class="lead mb-4">Я системный/сетевой администратор. Активно развиваюсь в направлении DevOps. У
-                            меня два красных диплома по технической специальности и опыт работы с современными
-                            технологиями для управления инфраструктурой.</p>
-                        <ul class="list-unstyled">
-                            <li class="mb-2">
-                                <i class="fas fa-check-circle text-success me-2"></i>
-                                Активно участвую в IT-мероприятиях
-                            </li>
-                            <li class="mb-2">
-                                <i class="fas fa-check-circle text-success me-2"></i>
-                                Изучаю инструменты автоматизации инфраструктуры
-                            </li>
-                            <li>
-                                <i class="fas fa-check-circle text-success me-2"></i>
-                                Разрабатываю свои собственные проекты
-                            </li>
-                        </ul>
+                            <!-- Текст -->
+                            <div class="col-md-9">
+                                <div class="card-header bg-dark text-white">
+                                    <h3><i class="fas fa-laptop-code me-2"></i>Я системный/сетевой администратор.
+                                        Активно развиваюсь в направлении DevOps. Имею два красных диплома по технической
+                                        специальности и опыт работы с
+                                        современным стеком
+                                        технологий для управления инфраструктурой.</h3>
+                                </div>
+                                <ul class="list-unstyled">
+                                    <li class="mb-2">
+                                        <i class="fas fa-check-circle text-success me-2"></i>
+                                        Активно участвую в IT-мероприятиях
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="fas fa-check-circle text-success me-2"></i>
+                                        Изучаю инструменты автоматизации инфраструктуры
+                                    </li>
+                                    <li>
+                                        <i class="fas fa-check-circle text-success me-2"></i>
+                                        Разрабатываю свои собственные проекты
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
+                </section>
+
+
+                <!-- Технические навыки -->
+                <section class="card shadow-sm mb-4">
+                    <div class="card-header bg-dark text-white">
+                        <h3><i class="fas fa-code me-2"></i>Технический стек</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <!-- Cloud -->
+                            <div class="col-md-4 mb-4">
+                                <h5 class="text-success"><i class="fas fa-cloud me-2"></i>Cloud</h5>
+                                <ul class="list-unstyled">
+                                    <li class="mb-2">Yandex Cloud (Managed Kubernetes)</li>
+                                </ul>
+                            </div>
+                            <!-- DevOps -->
+                            <div class="col-md-4 mb-4">
+                                <h5 class="text-success"><i class="fas fa-cogs me-2"></i>DevOps</h5>
+                                <ul class="list-unstyled">
+                                    <li class="mb-2">Docker • Podman • LXC</li>
+                                    <li class="mb-2">Kubernetes (EKS, kops)</li>
+                                    <li class="mb-2">CI/CD (GitLab CI, GitHub Actions)</li>
+                                </ul>
+                            </div>
+                            <!-- Automation -->
+                            <div class="col-md-4 mb-4">
+                                <h5 class="text-success"><i class="fas fa-robot me-2"></i>Automation</h5>
+                                <ul class="list-unstyled">
+                                    <li class="mb-2">Terraform • Pulumi</li>
+                                    <li class="mb-2">Ansible • Packer</li>
+                                    <li class="mb-2">Python • Bash</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- О сайте -->
+                <section class="card shadow-sm mb-4">
+                    <div class="card-header bg-dark text-white">
+                        <h3><i class="fas fa-laptop-code me-2"></i>О сайте</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Этот сайт-резюме разработан с использованием:</p>
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+                            <span class="badge bg-dark">HTML5</span>
+                            <span class="badge bg-dark">CSS3</span>
+                            <span class="badge bg-dark">Bootstrap 5</span>
+                            <span class="badge bg-dark">Font Awesome</span>
+                            <span class="badge bg-dark">Flask (Python)</span>
+                        </div>
+                        <p class="mb-1"><strong>Технологии</strong></p>
+                        <ul>
+                            <li>VDS Yandex Cloud</li>
+                            <li>Docker Compose</li>
+                            <li>CI/CD</li>
+                        </ul>
+                        <a href="https://github.com/Vladim1rZolotarev/test-devops-task.git" class="btn btn-dark mt-2">
+                            <i class="fab fa-github me-2"></i>Репозиторий
+                        </a>
+                    </div>
+                </section>
+
+                <!-- Контакты -->
+                <section class="card shadow-sm">
+                    <div class="card-header bg-dark text-white">
+                        <h3><i class="fas fa-envelope me-2"></i>Контакты</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-3 col-6">
+                                <a href="mailto:thevz27@gmail.com" class="btn btn-outline-dark w-100">
+                                    <i class="fas fa-envelope me-2"></i>Email
+                                </a>
+                            </div>
+                            <div class="col-md-3 col-6">
+                                <a href="https://t.me/Vladim1rZolotarev" class="btn btn-outline-primary w-100">
+                                    <i class="fab fa-telegram me-2"></i>Telegram
+                                </a>
+                            </div>
+                            <div class="col-md-3 col-6">
+                                <a href="https://github.com/Vladim1rZolotarev" class="btn btn-outline-dark w-100">
+                                    <i class="fab fa-github me-2"></i>GitHub
+                                </a>
+                            </div>
+                            <div class="col-md-3 col-6">
+                                <a href="https://linkedin.com/in/yourprofile" class="btn btn-outline-primary w-100">
+                                    <i class="fab fa-linkedin me-2"></i>LinkedIn
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
             </div>
         </div>
-        </section>
-
-
-        <!-- Технические навыки -->
-        <section class="card shadow-sm mb-4">
-            <div class="card-header bg-dark text-white">
-                <h3><i class="fas fa-code me-2"></i>Технический стек</h3>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <!-- Cloud -->
-                    <div class="col-md-4 mb-4">
-                        <h5 class="text-success"><i class="fas fa-cloud me-2"></i>Cloud</h5>
-                        <ul class="list-unstyled">
-                            <li class="mb-2">Yandex Cloud (Managed Kubernetes)</li>
-                        </ul>
-                    </div>
-                    <!-- DevOps -->
-                    <div class="col-md-4 mb-4">
-                        <h5 class="text-success"><i class="fas fa-cogs me-2"></i>DevOps</h5>
-                        <ul class="list-unstyled">
-                            <li class="mb-2">Docker • Podman • LXC</li>
-                            <li class="mb-2">Kubernetes (EKS, kops)</li>
-                            <li class="mb-2">CI/CD (GitLab CI, GitHub Actions)</li>
-                        </ul>
-                    </div>
-                    <!-- Automation -->
-                    <div class="col-md-4 mb-4">
-                        <h5 class="text-success"><i class="fas fa-robot me-2"></i>Automation</h5>
-                        <ul class="list-unstyled">
-                            <li class="mb-2">Terraform • Pulumi</li>
-                            <li class="mb-2">Ansible • Packer</li>
-                            <li class="mb-2">Python • Bash</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- О сайте -->
-        <section class="card shadow-sm mb-4">
-            <div class="card-header bg-dark text-white">
-                <h3><i class="fas fa-laptop-code me-2"></i>О сайте</h3>
-            </div>
-            <div class="card-body">
-                <p>Этот сайт-резюме разработан с использованием:</p>
-                <div class="d-flex flex-wrap gap-2 mb-3">
-                    <span class="badge bg-dark">HTML5</span>
-                    <span class="badge bg-dark">CSS3</span>
-                    <span class="badge bg-dark">Bootstrap 5</span>
-                    <span class="badge bg-dark">Font Awesome</span>
-                    <span class="badge bg-dark">Flask (Python)</span>
-                </div>
-                <p class="mb-1"><strong>Технологии</strong></p>
-                <ul>
-                    <li>VDS Yandex Cloud</li>
-                    <li>Docker Compose</li>
-                    <li>CI/CD</li>
-                </ul>
-                <a href="https://github.com/Vladim1rZolotarev/test-devops-task.git" class="btn btn-dark mt-2">
-                    <i class="fab fa-github me-2"></i>Репозиторий
-                </a>
-            </div>
-        </section>
-
-        <!-- Контакты -->
-        <section class="card shadow-sm">
-            <div class="card-header bg-dark text-white">
-                <h3><i class="fas fa-envelope me-2"></i>Контакты</h3>
-            </div>
-            <div class="card-body">
-                <div class="row g-3">
-                    <div class="col-md-3 col-6">
-                        <a href="mailto:thevz27@gmail.com" class="btn btn-outline-dark w-100">
-                            <i class="fas fa-envelope me-2"></i>Email
-                        </a>
-                    </div>
-                    <div class="col-md-3 col-6">
-                        <a href="https://t.me/Vladim1rZolotarev" class="btn btn-outline-primary w-100">
-                            <i class="fab fa-telegram me-2"></i>Telegram
-                        </a>
-                    </div>
-                    <div class="col-md-3 col-6">
-                        <a href="https://github.com/Vladim1rZolotarev" class="btn btn-outline-dark w-100">
-                            <i class="fab fa-github me-2"></i>GitHub
-                        </a>
-                    </div>
-                    <div class="col-md-3 col-6">
-                        <a href="https://linkedin.com/in/yourprofile" class="btn btn-outline-primary w-100">
-                            <i class="fab fa-linkedin me-2"></i>LinkedIn
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-    </div>
-    </div>
     </div>
 </body>
 
