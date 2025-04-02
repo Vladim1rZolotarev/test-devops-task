@@ -12,13 +12,11 @@
 </head>
 
 <body class="bg-light-subtle">
-    <!-- Анимированный фон -->
-    <div class="position-fixed top-0 start-0 w-100 h-100 bg-pattern"></div>
-
     <div class="container py-4">
         <div class="row justify-content-center">
             <div class="col-lg-10 col-xl-9">
 
+                <!-- Header -->
                 <header class="card shadow-sm mb-4 bg-dark text-white">
                     <div class="card-body">
                         <div class="row align-items-center">
@@ -30,251 +28,131 @@
                     </div>
                 </header>
 
-                <section class="card shadow-lg mb-4 border-0">
-                    <div class="card-header bg-white border-0 p-4">
-                        <h2 class="h3 mb-0 d-flex align-items-center">
-                            <span class="icon-circle bg-success me-3">
-                                <i class="fas fa-user text-white"></i>
-                            </span>
-                            Обо мне
-                        </h2>
+                <!-- Обо мне -->
+                <section class="card shadow-sm mb-4">
+                    <div class="card-header bg-dark text-white">
+                        <h3><i class="fas fa-user me-2"></i>Обо мне</h3>
                     </div>
-                    <div class="card-body p-4">
+                    <div class="card-body">
                         <div class="row align-items-center">
-                            <div class="col-md-3 text-center mb-4 mb-md-0">
+                            <div class="col-md-3 text-center mb-3 mb-md-0">
                                 <img src="https://via.placeholder.com/300x300" alt="Фото"
-                                    class="img-fluid rounded-circle shadow-sm border border-4 border-white"
-                                    style="max-width: 180px;">
+                                    class="img-fluid rounded-circle border border-3 border-success-custom"
+                                    style="max-width: 150px;">
                             </div>
                             <div class="col-md-9">
-                                <div class="about-content">
-                                    <p class="lead mb-4">Я системный/сетевой администратор, активно развиваюсь в
-                                        направлении DevOps. Имею два красных диплома по технической специальности и опыт
-                                        работы с современным стеком технологий для управления инфраструктурой.</p>
-
-                                    <div class="row g-3">
-                                        <div class="col-md-6">
-                                            <div class="d-flex align-items-center mb-3">
-                                                <div class="icon-circle-sm bg-success me-3">
-                                                    <i class="fas fa-check text-white"></i>
-                                                </div>
-                                                <span>Активно участвую в IT-мероприятиях</span>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="d-flex align-items-center mb-3">
-                                                <div class="icon-circle-sm bg-success me-3">
-                                                    <i class="fas fa-check text-white"></i>
-                                                </div>
-                                                <span>Изучаю инструменты автоматизации</span>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="d-flex align-items-center mb-3">
-                                                <div class="icon-circle-sm bg-success me-3">
-                                                    <i class="fas fa-check text-white"></i>
-                                                </div>
-                                                <span>Разрабатываю собственные проекты</span>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="d-flex align-items-center mb-3">
-                                                <div class="icon-circle-sm bg-success me-3">
-                                                    <i class="fas fa-check text-white"></i>
-                                                </div>
-                                                <span>Открыт к сотрудничеству</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Технический стек с иконками -->
-                <section class="card shadow-lg mb-4 border-0">
-                    <div class="card-header bg-white border-0 p-4">
-                        <h2 class="h3 mb-0 d-flex align-items-center">
-                            <span class="icon-circle bg-primary me-3">
-                                <i class="fas fa-code text-white"></i>
-                            </span>
-                            Технический стек
-                        </h2>
-                    </div>
-                    <div class="card-body p-4">
-                        <div class="row g-4">
-                            <!-- Cloud -->
-                            <div class="col-md-4">
-                                <div class="tech-category">
-                                    <h3 class="h5 mb-3 d-flex align-items-center">
-                                        <i class="fas fa-cloud text-primary me-2"></i>
-                                        Cloud
-                                    </h3>
-                                    <ul class="list-unstyled">
-                                        <li class="mb-2 d-flex align-items-center">
-                                            <i class="fas fa-check-circle text-success me-2"></i>
-                                            Yandex Cloud (Managed Kubernetes)
-                                        </li>
-                                        <li class="mb-2 d-flex align-items-center">
-                                            <i class="fas fa-check-circle text-success me-2"></i>
-                                            AWS (в процессе изучения)
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-
-                            <!-- DevOps -->
-                            <div class="col-md-4">
-                                <div class="tech-category">
-                                    <h3 class="h5 mb-3 d-flex align-items-center">
-                                        <i class="fas fa-cogs text-info me-2"></i>
-                                        DevOps
-                                    </h3>
-                                    <ul class="list-unstyled">
-                                        <li class="mb-2 d-flex align-items-center">
-                                            <i class="fas fa-check-circle text-success me-2"></i>
-                                            Docker • Podman • LXC
-                                        </li>
-                                        <li class="mb-2 d-flex align-items-center">
-                                            <i class="fas fa-check-circle text-success me-2"></i>
-                                            Kubernetes (EKS, kops)
-                                        </li>
-                                        <li class="mb-2 d-flex align-items-center">
-                                            <i class="fas fa-check-circle text-success me-2"></i>
-                                            CI/CD (GitLab CI, GitHub Actions)
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-
-                            <!-- Automation -->
-                            <div class="col-md-4">
-                                <div class="tech-category">
-                                    <h3 class="h5 mb-3 d-flex align-items-center">
-                                        <i class="fas fa-robot text-warning me-2"></i>
-                                        Automation
-                                    </h3>
-                                    <ul class="list-unstyled">
-                                        <li class="mb-2 d-flex align-items-center">
-                                            <i class="fas fa-check-circle text-success me-2"></i>
-                                            Terraform • Pulumi
-                                        </li>
-                                        <li class="mb-2 d-flex align-items-center">
-                                            <i class="fas fa-check-circle text-success me-2"></i>
-                                            Ansible • Packer
-                                        </li>
-                                        <li class="mb-2 d-flex align-items-center">
-                                            <i class="fas fa-check-circle text-success me-2"></i>
-                                            Python • Bash
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Прогресс-бары для навыков -->
-                        <div class="mt-4">
-                            <h4 class="h5 mb-3">Уровень владения:</h4>
-                            <div class="skill-item mb-3">
-                                <div class="d-flex justify-content-between mb-1">
-                                    <span>Kubernetes</span>
-                                    <span>85%</span>
-                                </div>
-                                <div class="progress" style="height: 8px;">
-                                    <div class="progress-bar bg-success" role="progressbar" style="width: 85%"
-                                        aria-valuenow="85" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </div>
-                            <div class="skill-item mb-3">
-                                <div class="d-flex justify-content-between mb-1">
-                                    <span>Terraform</span>
-                                    <span>75%</span>
-                                </div>
-                                <div class="progress" style="height: 8px;">
-                                    <div class="progress-bar bg-info" role="progressbar" style="width: 75%"
-                                        aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </div>
-                            <div class="skill-item mb-3">
-                                <div class="d-flex justify-content-between mb-1">
-                                    <span>CI/CD Pipelines</span>
-                                    <span>80%</span>
-                                </div>
-                                <div class="progress" style="height: 8px;">
-                                    <div class="progress-bar bg-primary" role="progressbar" style="width: 80%"
-                                        aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- О сайте с табами -->
-                <section class="card shadow-lg mb-4 border-0">
-                    <div class="card-header bg-white border-0 p-0">
-                        <ul class="nav nav-tabs" id="siteTab" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="tech-tab" data-bs-toggle="tab"
-                                    data-bs-target="#tech" type="button" role="tab">Технологии</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="stack-tab" data-bs-toggle="tab" data-bs-target="#stack"
-                                    type="button" role="tab">Стек</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="repo-tab" data-bs-toggle="tab" data-bs-target="#repo"
-                                    type="button" role="tab">Репозиторий</button>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="card-body p-4">
-                        <div class="tab-content" id="siteTabContent">
-                            <div class="tab-pane fade show active" id="tech" role="tabpanel">
-                                <h3 class="h5 mb-3">Используемые технологии</h3>
-                                <ul class="list-unstyled row g-2">
-                                    <li class="col-md-6 d-flex align-items-center">
-                                        <i class="fas fa-server text-muted me-2"></i>
-                                        VDS Yandex Cloud
+                                <p class="lead">Я системный/сетевой администратор, активно развиваюсь в направлении DevOps. Имею два красных диплома по технической специальности и опыт работы с современным стеком технологий для управления инфраструктурой.</p>
+                                <ul class="list-unstyled">
+                                    <li class="mb-2">
+                                        <i class="fas fa-check-circle text-success me-2"></i>
+                                        Активно участвую в IT-мероприятиях
                                     </li>
-                                    <li class="col-md-6 d-flex align-items-center">
-                                        <i class="fab fa-docker text-muted me-2"></i>
-                                        Docker Compose
+                                    <li class="mb-2">
+                                        <i class="fas fa-check-circle text-success me-2"></i>
+                                        Изучаю инструменты автоматизации инфраструктуры
                                     </li>
-                                    <li class="col-md-6 d-flex align-items-center">
-                                        <i class="fas fa-code-branch text-muted me-2"></i>
-                                        CI/CD Pipeline
+                                    <li class="mb-2">
+                                        <i class="fas fa-check-circle text-success me-2"></i>
+                                        Разрабатываю свои собственные проекты
                                     </li>
-                                    <li class="col-md-6 d-flex align-items-center">
-                                        <i class="fab fa-python text-muted me-2"></i>
-                                        Flask (Python)
+                                    <li>
+                                        <i class="fas fa-check-circle text-success me-2"></i>
+                                        Открыт к сотрудничеству
                                     </li>
                                 </ul>
                             </div>
-                            <div class="tab-pane fade" id="stack" role="tabpanel">
-                                <h3 class="h5 mb-3">Стек разработки</h3>
-                                <div class="d-flex flex-wrap gap-2 mb-3">
-                                    <span class="badge bg-primary">HTML5</span>
-                                    <span class="badge bg-primary">CSS3</span>
-                                    <span class="badge bg-primary">Bootstrap 5</span>
-                                    <span class="badge bg-primary">Font Awesome</span>
-                                    <span class="badge bg-primary">Flask</span>
-                                    <span class="badge bg-primary">Python</span>
-                                </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Технический стек -->
+                <section class="card shadow-sm mb-4">
+                    <div class="card-header bg-dark text-white">
+                        <h3><i class="fas fa-code me-2"></i>Технический стек</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <!-- Cloud -->
+                            <div class="col-md-4 mb-4">
+                                <h5 class="text-success"><i class="fas fa-cloud me-2"></i>Cloud</h5>
+                                <ul class="list-unstyled">
+                                    <li class="mb-2 d-flex align-items-center">
+                                        <i class="fas fa-check-circle text-success me-2"></i>
+                                        Yandex Cloud (Managed Kubernetes)
+                                    </li>
+                                    <li class="mb-2 d-flex align-items-center">
+                                        <i class="fas fa-check-circle text-success me-2"></i>
+                                        AWS (в процессе изучения)
+                                    </li>
+                                </ul>
                             </div>
-                            <div class="tab-pane fade" id="repo" role="tabpanel">
-                                <h3 class="h5 mb-3">Исходный код</h3>
-                                <p>Этот сайт с открытым исходным кодом. Вы можете изучить его реализацию:</p>
-                                <a href="https://github.com/Vladim1rZolotarev/test-devops-task.git"
-                                    class="btn btn-dark d-inline-flex align-items-center">
-                                    <i class="fab fa-github me-2 fs-5"></i>
-                                    Перейти в репозиторий
-                                </a>
+                            <!-- DevOps -->
+                            <div class="col-md-4 mb-4">
+                                <h5 class="text-success"><i class="fas fa-cogs me-2"></i>DevOps</h5>
+                                <ul class="list-unstyled">
+                                    <li class="mb-2 d-flex align-items-center">
+                                        <i class="fas fa-check-circle text-success me-2"></i>
+                                        Docker • Podman • LXC
+                                    </li>
+                                    <li class="mb-2 d-flex align-items-center">
+                                        <i class="fas fa-check-circle text-success me-2"></i>
+                                        Kubernetes (EKS, kops)
+                                    </li>
+                                    <li class="mb-2 d-flex align-items-center">
+                                        <i class="fas fa-check-circle text-success me-2"></i>
+                                        CI/CD (GitLab CI, GitHub Actions)
+                                    </li>
+                                </ul>
+                            </div>
+                            <!-- Automation -->
+                            <div class="col-md-4 mb-4">
+                                <h5 class="text-success"><i class="fas fa-robot me-2"></i>Automation</h5>
+                                <ul class="list-unstyled">
+                                    <li class="mb-2 d-flex align-items-center">
+                                        <i class="fas fa-check-circle text-success me-2"></i>
+                                        Terraform • Pulumi
+                                    </li>
+                                    <li class="mb-2 d-flex align-items-center">
+                                        <i class="fas fa-check-circle text-success me-2"></i>
+                                        Ansible • Packer
+                                    </li>
+                                    <li class="mb-2 d-flex align-items-center">
+                                        <i class="fas fa-check-circle text-success me-2"></i>
+                                        Python • Bash
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                     </div>
                 </section>
 
+                <!-- О сайте -->
+                <section class="card shadow-sm mb-4">
+                    <div class="card-header bg-dark text-white">
+                        <h3><i class="fas fa-laptop-code me-2"></i>О сайте</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Этот сайт-резюме разработан с использованием:</p>
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+                            <span class="badge bg-dark">HTML5</span>
+                            <span class="badge bg-dark">CSS3</span>
+                            <span class="badge bg-dark">Bootstrap 5</span>
+                            <span class="badge bg-dark">Font Awesome</span>
+                            <span class="badge bg-dark">Flask (Python)</span>
+                        </div>
+                        <p class="mb-1"><strong>Технологии</strong></p>
+                        <ul>
+                            <li>VDS Yandex Cloud</li>
+                            <li>Docker Compose</li>
+                            <li>CI/CD</li>
+                        </ul>
+                        <a href="https://github.com/Vladim1rZolotarev/test-devops-task.git" class="btn btn-dark mt-2">
+                            <i class="fab fa-github me-2"></i>Репозиторий
+                        </a>
+                    </div>
+                </section>
+
+                <!-- Контакты -->
                 <section class="card shadow-sm">
                     <div class="card-header bg-dark text-white">
                         <h3><i class="fas fa-envelope me-2"></i>Контакты</h3>
@@ -307,8 +185,7 @@
 
                 <!-- Футер -->
                 <footer class="text-center text-muted mt-5 py-4">
-                    <p class="mb-1">© 2023 Vladimir Zolotarev. Все права защищены.</p>
-                    <p class="small mb-0">Сайт обновлён: <span id="current-date"></span></p>
+                    <p class="mb-1">© 2025 Vladimir Zolotarev</p>
                 </footer>
 
             </div>
@@ -316,32 +193,6 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Обновление даты в футере
-        document.getElementById('current-date').textContent = new Date().toLocaleDateString('ru-RU', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        });
-
-        // Переключение темы
-        document.querySelectorAll('[data-theme]').forEach(btn => {
-            btn.addEventListener('click', function () {
-                const theme = this.getAttribute('data-theme');
-                document.documentElement.setAttribute('data-bs-theme', theme);
-                document.querySelectorAll('.theme-switcher .btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-
-                // Сохранение в localStorage
-                localStorage.setItem('theme', theme);
-            });
-        });
-
-        // Проверка сохранённой темы
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        document.documentElement.setAttribute('data-bs-theme', savedTheme);
-        document.querySelector(`.theme-switcher [data-theme="${savedTheme}"]`).classList.add('active');
-    </script>
 </body>
 
 </html>
