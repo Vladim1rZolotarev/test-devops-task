@@ -1,3 +1,5 @@
+#start
+
 services:
   flask-app:
     image: vladim1rzolotarev/flask-app:latest
