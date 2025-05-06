@@ -21,7 +21,7 @@ jobs:
     - name: Substitute secrets
       run: |
         export TELEGRAM_BOT_TOKEN="${{ secrets.TELEGRAM_BOT_TOKEN }}"
-        envsubst < alertmanager.yml > secret_alertmanager.yml
+        envsubst < alertmanager.yml > alertmanager.yml
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
