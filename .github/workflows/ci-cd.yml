@@ -61,15 +61,15 @@ jobs:
           grep "bot_token" alertmanager.yml || echo "Replacement failed!"
           sleep 3
           echo "Остановка текущих контейнеров..."
-          sudo docker compose down
+          docker compose down
           sleep 3
-          sudo docker rmi -f vladim1rzolotarev/flask-app
+          docker rmi -f vladim1rzolotarev/flask-app
           sleep 3
           echo "Запуск новых контейнеров..."
-          sudo docker compose up -d
+          docker compose up -d
           echo "Проверка деплоя на стабильность..."
           sleep 3
-          if ! sudo docker ps | grep -q "flask-app"; then
+          if ! docker ps | grep -q "flask-app"; then
             echo "Deployment failed! Triggering rollback..."
             exit 1  # Запускаем rollback
           fi
@@ -88,8 +88,8 @@ jobs:
         key: ${{ secrets.SERVER_SSH_KEY }}
         script: |
           # Откат на предыдущий стабильный образ
-          sudo docker pull vladim1rzolotarev/flask-app:rollback
-          sudo docker tag vladim1rzolotarev/flask-app:rollback vladim1rzolotarev/flask-app:$TAG
-          sudo docker compose ~/test-devops-task down
-          sudo docker compose ~/test-devops-task up -d
+          docker pull vladim1rzolotarev/flask-app:rollback
+          docker tag vladim1rzolotarev/flask-app:rollback vladim1rzolotarev/flask-app:$TAG
+          docker compose ~/test-devops-task down
+          docker compose ~/test-devops-task up -d
           echo "Rollback completed successfully."
