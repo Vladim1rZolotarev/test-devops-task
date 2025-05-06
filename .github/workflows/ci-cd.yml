@@ -85,9 +85,8 @@ jobs:
         key: ${{ secrets.SERVER_SSH_KEY }}
         script: |
           # Откат на предыдущий стабильный образ
-          cd ~/test-devops-task
           sudo docker pull vladim1rzolotarev/flask-app:rollback
           sudo docker tag vladim1rzolotarev/flask-app:rollback vladim1rzolotarev/flask-app:$TAG
-          sudo docker compose down
-          sudo docker compose up -d
+          sudo docker compose ~/test-devops-task down
+          sudo docker compose ~/test-devops-task up -d
           echo "Rollback completed successfully."
