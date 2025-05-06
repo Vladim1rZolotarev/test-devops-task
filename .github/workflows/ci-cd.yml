@@ -20,7 +20,12 @@ jobs:
           
     - name: Replace secrets in config
       run: |
-        sed -i "s|TELEGRAM_BOT_TOKEN|${{ secrets.TELEGRAM_BOT_TOKEN }}|g" alertmanager.yml
+        echo "Checking file existence..."
+        ls -la alertmanager.yml || echo "File not found!"
+        echo "Replacing token..."
+        sed -i "s#TELEGRAM_BOT_TOKEN#${{ secrets.TELEGRAM_BOT_TOKEN }}#g" alertmanager.yml
+        echo "Verifying replacement..."
+        grep "bot_token" alertmanager.yml || echo "Replacement failed!"
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
