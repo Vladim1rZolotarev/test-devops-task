@@ -54,7 +54,7 @@ jobs:
           git pull origin master
           sleep 3
           export TELEGRAM_BOT_TOKEN="${{ secrets.TELEGRAM_BOT_TOKEN }}"
-          envsubst < alertmanager.yml > alertmanager.yml
+          envsubst < alertmanager.yml > final_alertmanager.yml
           sleep 3
           echo "Остановка текущих контейнеров..."
           sudo docker compose down
