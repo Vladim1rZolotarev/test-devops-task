@@ -9,7 +9,7 @@ receivers:
 - name: 'telegram'
   telegram_configs:
   - api_url: 'https://api.telegram.org'
-    bot_token: '7930218950:AAF797elX4qU-o1ci-_BnLshUbsS23aa6BQ'
+    bot_token: '$TELEGRAM_BOT_TOKEN'
     chat_id: 6356340229
     send_resolved: true
     message: |
