@@ -3,8 +3,8 @@ name: Deploy to Staging and Production
 on:
   push:
     branches:
-      - feature  # Деплой на staging
-      - master     # Деплой на production
+      - feature
+      - master
     paths-ignore:
       - 'README.md'
 
