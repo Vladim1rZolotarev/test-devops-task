@@ -1,0 +1,95 @@
+name: Deploy to Staging and Production
+
+on:
+  push:
+    branches:
+      - feature
+      - master
+    paths-ignore:
+      - 'README.md'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_IMAGE: vladim1rzolotarev/flask-app
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_HUB_USERNAME }}
+        password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+    - name: Determine tag
+      id: tag
+      run: |
+        if [[ $GITHUB_REF == 'refs/heads/master' ]]; then
+          echo "TAG=latest" >> $GITHUB_OUTPUT
+          echo "COMPOSE_ENV=production" >> $GITHUB_OUTPUT
+        else
+          echo "TAG=staging" >> $GITHUB_OUTPUT
+          echo "COMPOSE_ENV=staging" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Build and push Docker image
+      run: |
+        docker build -t $DOCKER_IMAGE:${{ steps.tag.outputs.TAG }} .
+        docker push $DOCKER_IMAGE:${{ steps.tag.outputs.TAG }}
+
+    - name: Deploy to server
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USER }}
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        script: |
+          cd ~/test-devops-task
+          git pull origin master
+          sleep 3
+          echo "Checking file existence..."
+          ls -la alertmanager.yml || echo "File not found!"
+          echo "Replacing token..."
+          sed -i "s#\$TELEGRAM_BOT_TOKEN#${{ secrets.TELEGRAM_BOT_TOKEN }}#g" alertmanager.yml
+          echo "Verifying replacement..."
+          grep "bot_token" alertmanager.yml || echo "Replacement failed!"
+          sleep 3
+          echo "Остановка текущих контейнеров..."
+          docker compose down
+          sleep 3
+          docker rmi -f vladim1rzolotarev/flask-app
+          sleep 3
+          echo "Запуск новых контейнеров..."
+          docker compose up -d
+          echo "Проверка деплоя на стабильность..."
+          sleep 3
+          if ! docker ps | grep -q "flask-app"; then
+            echo "Deployment failed! Triggering rollback..."
+            exit 1  # Запускаем rollback
+          fi
+  
+  rollback:
+    runs-on: ubuntu-latest
+    needs: deploy
+    if: failure()
+    
+    steps:
+    - name: Rollback on failure
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USER }}
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        script: |
+          # Откат на предыдущий стабильный образ
+          docker pull vladim1rzolotarev/flask-app:rollback
+          docker tag vladim1rzolotarev/flask-app:rollback vladim1rzolotarev/flask-app:$TAG
+          docker compose ~/test-devops-task down
+          docker compose ~/test-devops-task up -d
+          echo "Rollback completed successfully."
