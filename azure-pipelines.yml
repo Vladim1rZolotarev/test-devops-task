@@ -1,0 +1,114 @@
+trigger:
+  branches:
+    include:
+      - feature
+      - master
+  paths:
+    exclude:
+      - README.md
+
+variables:
+  dockerImage: 'vladim1rzolotarev/flask-app'
+  vmImage: 'ubuntu-latest'
+
+stages:
+- stage: BuildAndPush
+  displayName: 'Build and Push Docker Image'
+  jobs:
+  - job: Build
+    pool:
+      vmImage: $(vmImage)
+    steps:
+    - task: DockerInstaller@0
+      displayName: 'Install Docker'
+    
+    - task: Docker@2
+      displayName: 'Login to Docker Hub'
+      inputs:
+        command: login
+        containerRegistry: 'dockerhub-connection' # Создайте Docker Hub service connection в Azure DevOps
+
+    - powershell: |
+        if ("$(Build.SourceBranch)" -eq "refs/heads/master") {
+          echo "##vso[task.setvariable variable=TAG]latest"
+          echo "##vso[task.setvariable variable=COMPOSE_ENV]production"
+        } else {
+          echo "##vso[task.setvariable variable=TAG]staging"
+          echo "##vso[task.setvariable variable=COMPOSE_ENV]staging"
+        }
+      displayName: 'Determine tag'
+
+    - task: Docker@2
+      displayName: 'Build Docker image'
+      inputs:
+        command: build
+        repository: $(dockerImage)
+        tags: $(TAG)
+        Dockerfile: '**/Dockerfile'
+
+    - task: Docker@2
+      displayName: 'Push Docker image'
+      inputs:
+        command: push
+        repository: $(dockerImage)
+        tags: $(TAG)
+
+- stage: Deploy
+  displayName: 'Deploy to Server'
+  dependsOn: BuildAndPush
+  jobs:
+  - job: Deploy
+    pool:
+      vmImage: $(vmImage)
+    steps:
+    - task: SSH@0
+      displayName: 'Deploy to server'
+      inputs:
+        sshEndpoint: 'ssh-connection' # Создайте SSH service connection в Azure DevOps
+        runOptions: 'inline'
+        inline: |
+          cd ~/test-devops-task
+          git pull origin master
+          sleep 3
+          echo "Checking file existence..."
+          ls -la alertmanager.yml || echo "File not found!"
+          echo "Replacing token..."
+          sed -i "s#\$TELEGRAM_BOT_TOKEN#$(TELEGRAM_BOT_TOKEN)#g" alertmanager.yml
+          echo "Verifying replacement..."
+          grep "bot_token" alertmanager.yml || echo "Replacement failed!"
+          sleep 3
+          echo "Остановка текущих контейнеров..."
+          docker compose down
+          sleep 3
+          docker rmi -f vladim1rzolotarev/flask-app
+          sleep 3
+          echo "Запуск новых контейнеров..."
+          docker compose up -d
+          echo "Проверка деплоя на стабильность..."
+          sleep 3
+          if ! docker ps | grep -q "flask-app"; then
+            echo "##vso[task.logissue type=error]Deployment failed! Triggering rollback..."
+            exit 1
+          fi
+
+- stage: Rollback
+  displayName: 'Rollback'
+  dependsOn: Deploy
+  condition: failed()
+  jobs:
+  - job: Rollback
+    pool:
+      vmImage: $(vmImage)
+    steps:
+    - task: SSH@0
+      displayName: 'Execute rollback'
+      inputs:
+        sshEndpoint: 'ssh-connection'
+        runOptions: 'inline'
+        inline: |
+          # Откат на предыдущий стабильный образ
+          docker pull vladim1rzolotarev/flask-app:rollback
+          docker tag vladim1rzolotarev/flask-app:rollback vladim1rzolotarev/flask-app:$(TAG)
+          docker compose ~/test-devops-task down
+          docker compose ~/test-devops-task up -d
+          echo "Rollback completed successfully."
