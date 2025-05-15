@@ -1,95 +1,172 @@
-name: Deploy to Staging and Production
+name: CI/CD Pipeline
 
 on:
   push:
-    branches:
-      - feature
-      - master
-    paths-ignore:
-      - 'README.md'
+    branches: [ master, feature ]
+  pull_request:
+    branches: [ master ]
 
 jobs:
-  deploy:
+  test:
+    name: Test Application
     runs-on: ubuntu-latest
-    env:
-      DOCKER_IMAGE: vladim1rzolotarev/flask-app
-
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
 
-    - name: Log in to Docker Hub
-      uses: docker/login-action@v3
-      with:
-        username: ${{ secrets.DOCKER_HUB_USERNAME }}
-        password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8 pytest
+          if [ -f app/requirements.txt ]; then pip install -r app/requirements.txt; fi
 
-    - name: Determine tag
-      id: tag
-      run: |
-        if [[ $GITHUB_REF == 'refs/heads/master' ]]; then
-          echo "TAG=latest" >> $GITHUB_OUTPUT
-          echo "COMPOSE_ENV=production" >> $GITHUB_OUTPUT
-        else
-          echo "TAG=staging" >> $GITHUB_OUTPUT
-          echo "COMPOSE_ENV=staging" >> $GITHUB_OUTPUT
-        fi
+      - name: Lint with flake8
+        run: |
+          flake8 app/ --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 app/ --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
-    - name: Build and push Docker image
-      run: |
-        docker build -t $DOCKER_IMAGE:${{ steps.tag.outputs.TAG }} .
-        docker push $DOCKER_IMAGE:${{ steps.tag.outputs.TAG }}
+      - name: Test with pytest
+        run: |
+          pytest
 
-    - name: Deploy to server
-      uses: appleboy/ssh-action@v0.1.10
-      with:
-        host: ${{ secrets.SERVER_HOST }}
-        username: ${{ secrets.SERVER_USER }}
-        key: ${{ secrets.SERVER_SSH_KEY }}
-        script: |
-          cd ~/test-devops-task
-          git pull origin master
-          sleep 3
-          echo "Checking file existence..."
-          ls -la alertmanager.yml || echo "File not found!"
-          echo "Replacing token..."
-          sed -i "s#\$TELEGRAM_BOT_TOKEN#${{ secrets.TELEGRAM_BOT_TOKEN }}#g" alertmanager.yml
-          echo "Verifying replacement..."
-          grep "bot_token" alertmanager.yml || echo "Replacement failed!"
-          sleep 3
-          echo "Остановка текущих контейнеров..."
-          docker compose down
-          sleep 3
-          docker rmi -f vladim1rzolotarev/flask-app
-          sleep 3
-          echo "Запуск новых контейнеров..."
-          docker compose up -d
-          echo "Проверка деплоя на стабильность..."
-          sleep 3
-          if ! docker ps | grep -q "flask-app"; then
-            echo "Deployment failed! Triggering rollback..."
-            exit 1  # Запускаем rollback
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'Dockerfile'
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          severity: 'CRITICAL,HIGH'
+
+  build-and-push:
+    name: Build and Push Docker Image
+    runs-on: ubuntu-latest
+    needs: [test, security-scan]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Set environment variables
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/master" ]]; then
+            echo "TAG=latest" >> $GITHUB_ENV
+            echo "ENVIRONMENT=production" >> $GITHUB_ENV
+          else
+            echo "TAG=staging" >> $GITHUB_ENV
+            echo "ENVIRONMENT=staging" >> $GITHUB_ENV
           fi
-  
+          echo "DOCKER_IMAGE=vladim1rzolotarev/flask-app" >> $GITHUB_ENV
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: ${{ env.DOCKER_IMAGE }}:${{ env.TAG }},${{ env.DOCKER_IMAGE }}:${{ github.sha }}
+          cache-from: type=registry,ref=${{ env.DOCKER_IMAGE }}:buildcache
+          cache-to: type=registry,ref=${{ env.DOCKER_IMAGE }}:buildcache,mode=max
+
+      - name: Save current image as rollback
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: ${{ env.DOCKER_IMAGE }}:rollback
+          cache-from: type=registry,ref=${{ env.DOCKER_IMAGE }}:buildcache
+
+  deploy:
+    name: Deploy to Server
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    environment: ${{ env.ENVIRONMENT }}
+    steps:
+      - name: Set environment variables
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/master" ]]; then
+            echo "TAG=latest" >> $GITHUB_ENV
+            echo "ENVIRONMENT=production" >> $GITHUB_ENV
+            echo "SERVER_HOST=${{ secrets.PRODUCTION_HOST }}" >> $GITHUB_ENV
+          else
+            echo "TAG=staging" >> $GITHUB_ENV
+            echo "ENVIRONMENT=staging" >> $GITHUB_ENV
+            echo "SERVER_HOST=${{ secrets.STAGING_HOST }}" >> $GITHUB_ENV
+          fi
+          echo "DOCKER_IMAGE=vladim1rzolotarev/flask-app" >> $GITHUB_ENV
+
+      - name: Deploy to server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.SERVER_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /path/to/project
+            docker pull ${{ env.DOCKER_IMAGE }}:${{ env.TAG }}
+            docker-compose down
+            docker-compose up -d
+            
+            # Проверка успешного запуска
+            echo "Waiting for services to start..."
+            sleep 10
+            
+            # Проверка доступности Flask-приложения
+            if ! curl -s http://localhost/health | grep -q "status.*ok"; then
+              echo "Health check failed! Rolling back..."
+              exit 1
+            fi
+            
+            echo "Deployment successful!"
+
   rollback:
+    name: Rollback on Failure
     runs-on: ubuntu-latest
     needs: deploy
     if: failure()
-    
     steps:
-    - name: Rollback on failure
-      uses: appleboy/ssh-action@v0.1.10
-      with:
-        host: ${{ secrets.SERVER_HOST }}
-        username: ${{ secrets.SERVER_USER }}
-        key: ${{ secrets.SERVER_SSH_KEY }}
-        script: |
-          # Откат на предыдущий стабильный образ
-          docker pull vladim1rzolotarev/flask-app:rollback
-          docker tag vladim1rzolotarev/flask-app:rollback vladim1rzolotarev/flask-app:$TAG
-          docker compose ~/test-devops-task down
-          docker compose ~/test-devops-task up -d
-          echo "Rollback completed successfully."
+      - name: Set environment variables
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/master" ]]; then
+            echo "TAG=latest" >> $GITHUB_ENV
+            echo "SERVER_HOST=${{ secrets.PRODUCTION_HOST }}" >> $GITHUB_ENV
+          else
+            echo "TAG=staging" >> $GITHUB_ENV
+            echo "SERVER_HOST=${{ secrets.STAGING_HOST }}" >> $GITHUB_ENV
+          fi
+          echo "DOCKER_IMAGE=vladim1rzolotarev/flask-app" >> $GITHUB_ENV
+
+      - name: Rollback deployment
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.SERVER_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /path/to/project
+            echo "Rolling back to previous stable version..."
+            docker pull ${{ env.DOCKER_IMAGE }}:rollback
+            docker tag ${{ env.DOCKER_IMAGE }}:rollback ${{ env.DOCKER_IMAGE }}:${{ env.TAG }}
+            docker-compose down
+            docker-compose up -d
+            echo "Rollback completed."

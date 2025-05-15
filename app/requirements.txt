@@ -1,3 +1,5 @@
 flask
 gunicorn
 prometheus_flask_exporter
+redis
+flask-caching

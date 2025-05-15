@@ -29,3 +29,52 @@ groups:
     annotations:
       summary: "Flask App is DOWN!"
       description: "Flask-приложение не отвечает!"
+
+- name: system
+  rules:
+  - alert: HighCPULoad
+    expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "High CPU Load ({{ $labels.instance }})"
+      description: "CPU загрузка выше 80% уже 5 минут: {{ $value }}%"
+
+  - alert: HighMemoryUsage
+    expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100 > 85
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "High Memory Usage ({{ $labels.instance }})"
+      description: "Использование памяти выше 85% уже 5 минут: {{ $value }}%"
+
+  - alert: LowDiskSpace
+    expr: node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"} * 100 < 10
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Low Disk Space ({{ $labels.instance }})"
+      description: "Осталось менее 10% свободного места на диске: {{ $value }}%"
+
+- name: redis
+  rules:
+  - alert: RedisDown
+    expr: up{job="redis"} == 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Redis is DOWN!"
+      description: "Redis не отвечает!"
+
+  - alert: RedisHighMemoryUsage
+    expr: redis_memory_used_bytes / redis_memory_max_bytes * 100 > 80
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Redis High Memory Usage ({{ $labels.instance }})"
+      description: "Redis использует более 80% выделенной памяти: {{ $value }}%"
