@@ -123,8 +123,8 @@ jobs:
             cd ~/test-devops-task
             git pull origin master
             docker pull ${{ env.DOCKER_IMAGE }}:${{ env.TAG }}
-            docker-compose down
-            docker-compose up -d
+            docker compose down
+            docker compose up -d
             
             # Проверка успешного запуска
             echo "Waiting for services to start..."
@@ -166,6 +166,6 @@ jobs:
             echo "Rolling back to previous stable version..."
             docker pull ${{ env.DOCKER_IMAGE }}:rollback
             docker tag ${{ env.DOCKER_IMAGE }}:rollback ${{ env.DOCKER_IMAGE }}:${{ env.TAG }}
-            docker-compose down
-            docker-compose up -d
+            docker compose down
+            docker compose up -d
             echo "Rollback completed."
