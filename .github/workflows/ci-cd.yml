@@ -100,7 +100,8 @@ jobs:
     name: Deploy to Server
     runs-on: ubuntu-latest
     needs: build-and-push
-    environment: ${{ env.ENVIRONMENT }}
+    environment: 
+      name: ${{ github.ref == 'refs/heads/master' && 'production' || 'staging' }}
     steps:
       - name: Set environment variables
         run: |
