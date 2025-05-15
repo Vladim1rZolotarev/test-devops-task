@@ -131,7 +131,7 @@ jobs:
             sleep 10
             
             # Проверка доступности Flask-приложения
-            if ! curl -s http://localhost/health | grep -q "status.*ok"; then
+            if ! curl -s https://zolotarev.tech/health | grep -q "status.*ok"; then
               echo "Health check failed! Rolling back..."
               exit 1
             fi
