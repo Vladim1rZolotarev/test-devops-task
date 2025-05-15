@@ -11,8 +11,22 @@ services:
       - FLASK_ENV=production
     networks:
       - my_network
+    restart: unless-stopped
     deploy:
-      replicas: 1
+      replicas: 3
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
     labels:
       - "prometheus-job=flask-app"
       - "prometheus-port=5000"
@@ -28,6 +42,17 @@ services:
       - "443:443"
     depends_on:
       - flask-app
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.3'
+          memory: 128M
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     networks:
       - my_network
     labels:
@@ -41,6 +66,7 @@ services:
       - '-nginx.scrape-uri=http://nginx/basic_status'
     networks:
       - my_network
+    restart: unless-stopped
     depends_on:
       - nginx
 
@@ -50,22 +76,33 @@ services:
       - "9093:9093"
     volumes:
       - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml
+      - alertmanager_data:/alertmanager
     networks:
       - my_network
+    restart: unless-stopped
     command:
       - '--config.file=/etc/alertmanager/alertmanager.yml'
+      - '--storage.path=/alertmanager'
 
   prometheus:
     image: prom/prometheus:latest
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
       - ./alert_rules.yml:/etc/prometheus/alert_rules.yml
+      - prometheus_data:/prometheus
     ports:
       - "9090:9090"
     networks:
       - my_network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
       - '--web.enable-lifecycle'
     depends_on:
       - alertmanager
@@ -79,6 +116,12 @@ services:
       - loki
     networks:
       - my_network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
     volumes:
       - grafana_data:/var/lib/grafana
       - /etc/letsencrypt/live/zolotarev.tech/fullchain.pem:/etc/grafana/certs/fullchain.pem:ro
@@ -88,6 +131,7 @@ services:
       - GF_SERVER_CERT_FILE=/etc/grafana/certs/fullchain.pem
       - GF_SERVER_CERT_KEY=/etc/grafana/certs/privkey.pem
       - GF_SERVER_DOMAIN=zolotarev.tech
+      - GF_SECURITY_ADMIN_PASSWORD=secure_password
 
   loki:
     image: grafana/loki:latest
@@ -97,6 +141,11 @@ services:
     ports:
       - "3100:3100"
     restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
     networks:
       - my_network
 
@@ -104,13 +153,52 @@ services:
     image: grafana/promtail:latest
     volumes:
       - ./nginx/logs:/var/log/nginx
+      - ./app/logs:/var/log/flask
       - ./promtail-config.yml:/etc/promtail/config.yml
     command:
       - '-config.file=/etc/promtail/config.yml'
     networks:
       - my_network
+    restart: unless-stopped
     depends_on:
       - loki
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--path.rootfs=/rootfs'
+    ports:
+      - "9100:9100"
+    restart: unless-stopped
+    networks:
+      - my_network
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.3'
+          memory: 256M
+    command: ["redis-server", "--appendonly", "yes"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - my_network
 
 networks:
   my_network:
@@ -119,3 +207,6 @@ networks:
 volumes:
   grafana_data:
   loki_data:
+  prometheus_data:
+  alertmanager_data:
+  redis_data:

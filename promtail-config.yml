@@ -16,3 +16,11 @@ scrape_configs:
     labels:
       job: nginx-logs
       __path__: /var/log/nginx/*.log
+
+- job_name: flask
+  static_configs:
+  - targets:
+      - localhost
+    labels:
+      job: flask-logs
+      __path__: /var/log/flask/*.log
