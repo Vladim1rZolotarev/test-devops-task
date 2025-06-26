@@ -42,6 +42,7 @@ services:
       - "443:443"
     depends_on:
       - flask-app
+      - grafana
     restart: unless-stopped
     deploy:
       resources:
@@ -109,8 +110,8 @@ services:
 
   grafana:
     image: grafana/grafana:latest
-    ports:
-      - "3000:3000"
+    expose:
+      - "3000"
     depends_on:
       - prometheus
       - loki
@@ -130,8 +131,11 @@ services:
       - GF_SERVER_PROTOCOL=https
       - GF_SERVER_CERT_FILE=/etc/grafana/certs/fullchain.pem
       - GF_SERVER_CERT_KEY=/etc/grafana/certs/privkey.pem
-      - GF_SERVER_DOMAIN=zolotarev.tech
+      - GF_SERVER_DOMAIN=metrics.zolotarev.tech
+      - GF_SERVER_ROOT_URL=https://metrics.zolotarev.tech
       - GF_SECURITY_ADMIN_PASSWORD=secure_password
+      - GF_SECURITY_COOKIE_SECURE=true
+      - GF_SECURITY_COOKIE_SAMESITE=none
 
   loki:
     image: grafana/loki:latest
