@@ -213,9 +213,6 @@ services:
     environment:
       - REDIS_HOST=redis
       - POSTGRES_HOST=postgres
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     env_file:
       - .env
     volumes:
@@ -228,10 +225,6 @@ services:
   postgres:
     image: postgres:15
     restart: unless-stopped
-    environment:
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     env_file:
       - .env
     volumes:
