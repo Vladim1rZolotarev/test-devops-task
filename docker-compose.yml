@@ -213,6 +213,7 @@ services:
     environment:
       - REDIS_HOST=redis
       - POSTGRES_HOST=postgres
+      - NEXTCLOUD_TRUSTED_DOMAINS=cloud.zolotarev.tech
     env_file:
       - ./.env
     volumes:
