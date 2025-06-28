@@ -7,6 +7,8 @@ services:
       - "5000"
     environment:
       - FLASK_ENV=production
+    env_file:
+      - .env
     networks:
       - my_network
     restart: unless-stopped
@@ -20,7 +22,7 @@ services:
           cpus: '0.1'
           memory: 128M
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:5000/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -34,7 +36,7 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - /etc/letsencrypt:/etc/letsencrypt:ro
-      - ./nginx/logs:/var/log/nginx
+      - ./logs/nginx:/var/log/nginx
       - nextcloud_data:/var/www/html:ro
     ports:
       - "80:80"
@@ -50,7 +52,7 @@ services:
           cpus: '0.3'
           memory: 128M
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost/basic_status || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -154,8 +156,8 @@ services:
   promtail:
     image: grafana/promtail:latest
     volumes:
-      - ./nginx/logs:/var/log/nginx
-      - ./app/logs:/var/log/flask
+      - ./logs/nginx:/var/log/nginx
+      - ./logs/app:/var/log/flask
       - ./promtail-config.yml:/etc/promtail/config.yml
     command:
       - '-config.file=/etc/promtail/config.yml'
@@ -209,11 +211,13 @@ services:
       - postgres
       - redis
     environment:
-      REDIS_HOST: redis
-      POSTGRES_HOST: postgres
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      - REDIS_HOST=redis
+      - POSTGRES_HOST=postgres
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    env_file:
+      - .env
     volumes:
       - nextcloud_data:/var/www/html
     expose:
@@ -225,9 +229,11 @@ services:
     image: postgres:15
     restart: unless-stopped
     environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    env_file:
+      - .env
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
