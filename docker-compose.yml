@@ -214,7 +214,7 @@ services:
       - REDIS_HOST=redis
       - POSTGRES_HOST=postgres
     env_file:
-      - .env
+      - ./.env
     volumes:
       - nextcloud_data:/var/www/html
     expose:
@@ -226,7 +226,7 @@ services:
     image: postgres:15
     restart: unless-stopped
     env_file:
-      - .env
+      - ./.env
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
