@@ -214,8 +214,11 @@ services:
       - REDIS_HOST=redis
       - POSTGRES_HOST=postgres
       - NEXTCLOUD_TRUSTED_DOMAINS=cloud.zolotarev.tech
-    env_file:
-      - ./.env
+      - POSTGRES_DB=nextcloud_db
+      - POSTGRES_USER=vladimir
+      - POSTGRES_PASSWORD=2739333
+      - NEXTCLOUD_ADMIN_USER=admin
+      - NEXTCLOUD_ADMIN_PASSWORD=2739333VZ
     volumes:
       - nextcloud_data:/var/www/html
     expose:
@@ -226,8 +229,10 @@ services:
   postgres:
     image: postgres:15
     restart: unless-stopped
-    env_file:
-      - ./.env
+    environment:
+      - POSTGRES_DB=nextcloud_db
+      - POSTGRES_USER=vladimir
+      - POSTGRES_PASSWORD=2739333
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
