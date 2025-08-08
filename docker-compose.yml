@@ -244,9 +244,16 @@ networks:
 
 volumes:
   grafana_data:
+    external: true
   loki_data:
+    external: true
   prometheus_data:
+    external: true
   alertmanager_data:
+    external: true
   redis_data:
+    external: true
   nextcloud_data:
+    external: true
   postgres_data:
+    external: true
